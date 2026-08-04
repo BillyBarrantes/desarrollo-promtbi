@@ -1,5 +1,4 @@
 {
-  "$schema": "https://opencode.ai/config.json",
   "default_agent": "planner",
   "permission": {
     "*": "ask",
@@ -7,13 +6,20 @@
     "grep": "allow",
     "glob": "allow",
     "lsp": "allow",
-    "edit": { "*": "ask" },
+    "edit": {
+      "*": "ask",
+      ".env": "deny",
+      ".env.*": "deny"
+    },
     "bash": {
       "*": "ask",
       "pytest*": "allow",
       "cd backend && pytest*": "allow",
       "npm run lint*": "allow",
-      "pnpm lint*": "allow"
+      "pnpm lint*": "allow",
+      "git status*": "allow",
+      "git diff*": "allow",
+      "git push*": "deny"
     },
     "skill": {
       "plan-*": "allow",
