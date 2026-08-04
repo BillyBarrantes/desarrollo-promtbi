@@ -1,0 +1,27 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "default_agent": "planner",
+  "permission": {
+    "*": "ask",
+    "read": "allow",
+    "grep": "allow",
+    "glob": "allow",
+    "lsp": "allow",
+    "edit": { "*": "ask" },
+    "bash": {
+      "*": "ask",
+      "pytest*": "allow",
+      "cd backend && pytest*": "allow",
+      "npm run lint*": "allow",
+      "pnpm lint*": "allow"
+    },
+    "skill": {
+      "plan-*": "allow",
+      "qa-*": "allow",
+      "pr-*": "ask",
+      "infra-*": "deny",
+      "prod-*": "deny"
+    },
+    "external_directory": "deny"
+  }
+}

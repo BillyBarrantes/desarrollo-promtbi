@@ -1,0 +1,12 @@
+{
+  "task_id": "task-0001",
+  "title": "Validación de esquema en exportación DXF",
+  "status": "planned",
+  "current_agent": "planner",
+  "goal": "Revisar los servicios app/services/dxf_service.py y validar que la exportación maneje excepciones de geometría no válida.",
+  "acceptance_criteria": [
+    "Plan detallado con modificaciones en backend/app/services/dxf_service.py",
+    "Definición de prueba unitaria en backend/tests/",
+    "Cero archivos modificados en esta fase"
+  ]
+}
