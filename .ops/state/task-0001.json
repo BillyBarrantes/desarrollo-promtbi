@@ -1,12 +1,49 @@
 {
   "task_id": "task-0001",
   "title": "Validación de esquema en exportación DXF",
-  "status": "planned",
-  "current_agent": "planner",
+  "status": "awaiting_approval",
+  "current_agent": "qa",
   "goal": "Revisar los servicios app/services/dxf_service.py y validar que la exportación maneje excepciones de geometría no válida.",
   "acceptance_criteria": [
     "Plan detallado con modificaciones en backend/app/services/dxf_service.py",
     "Definición de prueba unitaria en backend/tests/",
     "Cero archivos modificados en esta fase"
-  ]
+  ],
+  "implementation": {
+    "branch": "agent/dev/task-0001",
+    "modified_files": [
+      "backend/app/services/dxf_service.py",
+      "backend/app/services/exceptions.py",
+      "backend/tests/test_dxf_service.py"
+    ],
+    "patches_applied": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"],
+    "tests": {
+      "total": 7,
+      "passed": 7,
+      "regression": "2/2 (test_layouts_api.py)"
+    },
+    "lint": "ruff check OK (all checks passed)",
+    "retries": 2,
+    "notes": "ezdxf 1.4.4 expone DXFError en el namespace top-level (no ezdxf.exceptions); el test 4 simula el fallo de add_blockref para bloque inexistente porque ezdxf 1.4.x es permisivo en insert time."
+  },
+  "qa": {
+    "verdict": "APPROVED",
+    "tests": {
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "duration_s": 2.25
+    },
+    "lint": "ruff check OK (all checks passed)",
+    "report_path": "reports/qa/task-0001-qa.md",
+    "coverage": {
+      "patches_direct": ["A", "B", "C", "G", "H", "J"],
+      "patches_implicit": ["D", "E", "F", "I", "K"]
+    },
+    "findings": [
+      "Compatibilidad ezdxf 1.4.4: DXFError via top-level namespace (resuelto con try/except ImportError)",
+      "add_blockref permisivo en ezdxf 1.4.x: test 4 simula fallo via monkeypatch",
+      "Reintentos consumidos: 2/3 (dentro del limite AGENT_POLICY §3)"
+    ]
+  }
 }
