@@ -1,0 +1,466 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vipromt.local/schemas/schema_v1.json",
+  "title": "ViPromt Technical Layout Schema v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "project_id",
+    "timestamp_utc",
+    "coordenadas_terreno",
+    "muros_y_columnas",
+    "puertas_ventanas",
+    "instalaciones_MEP",
+    "validacion_RNE"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "v1"
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "coordenadas_terreno": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unidad",
+        "area_total_m2",
+        "vertices"
+      ],
+      "properties": {
+        "unidad": {
+          "type": "string",
+          "enum": [
+            "m"
+          ]
+        },
+        "area_total_m2": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "vertices": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "$ref": "#/$defs/punto_2d"
+          }
+        },
+        "retiros_m": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "frontal": { "type": "number", "minimum": 0 },
+            "posterior": { "type": "number", "minimum": 0 },
+            "izquierdo": { "type": "number", "minimum": 0 },
+            "derecho": { "type": "number", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "muros_y_columnas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "muros",
+        "columnas"
+      ],
+      "properties": {
+        "muros": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "tipo",
+              "inicio",
+              "fin",
+              "espesor_m"
+            ],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "tipo": {
+                "type": "string",
+                "enum": [
+                  "portante",
+                  "no_portante",
+                  "cerramiento"
+                ]
+              },
+              "inicio": { "$ref": "#/$defs/punto_2d" },
+              "fin": { "$ref": "#/$defs/punto_2d" },
+              "espesor_m": { "type": "number", "exclusiveMinimum": 0 },
+              "altura_m": { "type": "number", "exclusiveMinimum": 0 }
+            }
+          }
+        },
+        "columnas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "centro",
+              "ancho_m",
+              "largo_m",
+              "estructural"
+            ],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "centro": { "$ref": "#/$defs/punto_2d" },
+              "ancho_m": { "type": "number", "exclusiveMinimum": 0 },
+              "largo_m": { "type": "number", "exclusiveMinimum": 0 },
+              "estructural": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "puertas_ventanas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "puertas",
+        "ventanas"
+      ],
+      "properties": {
+        "puertas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "tipo",
+              "muro_id",
+              "posicion",
+              "ancho_m",
+              "alto_m",
+              "abatimiento"
+            ],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "tipo": {
+                "type": "string",
+                "enum": [
+                  "principal",
+                  "interior",
+                  "bano",
+                  "servicio"
+                ]
+              },
+              "muro_id": { "type": "string", "minLength": 1 },
+              "posicion": { "$ref": "#/$defs/punto_2d" },
+              "ancho_m": { "type": "number", "exclusiveMinimum": 0 },
+              "alto_m": { "type": "number", "exclusiveMinimum": 0 },
+              "abatimiento": {
+                "type": "string",
+                "enum": [
+                  "izquierda",
+                  "derecha",
+                  "corrediza",
+                  "plegable"
+                ]
+              }
+            }
+          }
+        },
+        "ventanas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "muro_id",
+              "posicion",
+              "ancho_m",
+              "alto_m",
+              "antepecho_m"
+            ],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "muro_id": { "type": "string", "minLength": 1 },
+              "posicion": { "$ref": "#/$defs/punto_2d" },
+              "ancho_m": { "type": "number", "exclusiveMinimum": 0 },
+              "alto_m": { "type": "number", "exclusiveMinimum": 0 },
+              "antepecho_m": { "type": "number", "minimum": 0 },
+              "tipo": {
+                "type": "string",
+                "enum": [
+                  "corrediza",
+                  "batiente",
+                  "fija",
+                  "proyectante"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "instalaciones_MEP": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sanitaria",
+        "electrica"
+      ],
+      "properties": {
+        "sanitaria": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "montante_id",
+            "nodos_agua",
+            "nodos_desague",
+            "tramos"
+          ],
+          "properties": {
+            "montante_id": { "type": "string", "minLength": 1 },
+            "nodos_agua": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/nodo_mep" }
+            },
+            "nodos_desague": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/nodo_mep" }
+            },
+            "tramos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "desde_nodo_id",
+                  "hasta_nodo_id",
+                  "diametro_mm",
+                  "pendiente_porcentaje"
+                ],
+                "properties": {
+                  "id": { "type": "string", "minLength": 1 },
+                  "desde_nodo_id": { "type": "string", "minLength": 1 },
+                  "hasta_nodo_id": { "type": "string", "minLength": 1 },
+                  "diametro_mm": { "type": "number", "exclusiveMinimum": 0 },
+                  "pendiente_porcentaje": { "type": "number", "minimum": 0 }
+                }
+              }
+            }
+          }
+        },
+        "electrica": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "tablero_general",
+            "circuitos",
+            "puntos"
+          ],
+          "properties": {
+            "tablero_general": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "ubicacion",
+                "amperaje_principal"
+              ],
+              "properties": {
+                "id": { "type": "string", "minLength": 1 },
+                "ubicacion": { "$ref": "#/$defs/punto_2d" },
+                "amperaje_principal": { "type": "number", "exclusiveMinimum": 0 }
+              }
+            },
+            "circuitos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "tipo",
+                  "breaker_a"
+                ],
+                "properties": {
+                  "id": { "type": "string", "minLength": 1 },
+                  "tipo": {
+                    "type": "string",
+                    "enum": [
+                      "iluminacion",
+                      "tomacorriente",
+                      "fuerza"
+                    ]
+                  },
+                  "breaker_a": { "type": "number", "exclusiveMinimum": 0 }
+                }
+              }
+            },
+            "puntos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "tipo",
+                  "ambiente",
+                  "ubicacion",
+                  "circuito_id"
+                ],
+                "properties": {
+                  "id": { "type": "string", "minLength": 1 },
+                  "tipo": {
+                    "type": "string",
+                    "enum": [
+                      "luminaria",
+                      "interruptor",
+                      "tomacorriente",
+                      "salida_especial"
+                    ]
+                  },
+                  "ambiente": { "type": "string", "minLength": 1 },
+                  "ubicacion": { "$ref": "#/$defs/punto_2d" },
+                  "circuito_id": { "type": "string", "minLength": 1 }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "validacion_RNE": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "estado_global",
+        "reglas_evaluadas",
+        "resumen"
+      ],
+      "properties": {
+        "estado_global": {
+          "type": "string",
+          "enum": [
+            "aprobado",
+            "observado",
+            "rechazado"
+          ]
+        },
+        "reglas_evaluadas": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "rule_id",
+              "categoria",
+              "resultado",
+              "evidencia"
+            ],
+            "properties": {
+              "rule_id": { "type": "string", "minLength": 1 },
+              "categoria": {
+                "type": "string",
+                "enum": [
+                  "arquitectura",
+                  "circulacion",
+                  "ventilacion_iluminacion",
+                  "sanitaria",
+                  "electrica",
+                  "estructural"
+                ]
+              },
+              "resultado": {
+                "type": "string",
+                "enum": [
+                  "cumple",
+                  "no_cumple",
+                  "no_aplica"
+                ]
+              },
+              "evidencia": { "type": "string", "minLength": 1 },
+              "valor_normativo": { "type": "string" },
+              "valor_observado": { "type": "string" },
+              "severidad": {
+                "type": "string",
+                "enum": [
+                  "baja",
+                  "media",
+                  "alta",
+                  "critica"
+                ]
+              }
+            }
+          }
+        },
+        "resumen": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "total_reglas",
+            "cumple",
+            "no_cumple",
+            "no_aplica"
+          ],
+          "properties": {
+            "total_reglas": { "type": "integer", "minimum": 0 },
+            "cumple": { "type": "integer", "minimum": 0 },
+            "no_cumple": { "type": "integer", "minimum": 0 },
+            "no_aplica": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "punto_2d": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "x",
+        "y"
+      ],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      }
+    },
+    "nodo_mep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "tipo",
+        "ambiente",
+        "ubicacion"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "tipo": {
+          "type": "string",
+          "enum": [
+            "lavadero",
+            "inodoro",
+            "ducha",
+            "lavamanos",
+            "fregadero",
+            "punto_lavadora",
+            "otro"
+          ]
+        },
+        "ambiente": { "type": "string", "minLength": 1 },
+        "ubicacion": { "$ref": "#/$defs/punto_2d" }
+      }
+    }
+  }
+}
