@@ -1,0 +1,63 @@
+{
+  "task_id": "task-0002",
+  "title": "Implementar excepcion personalizada DXFInvalidLayerError",
+  "repo": "desarrollo-promtbi",
+  "status": "done",
+  "current_agent": "human",
+  "created_at": "2026-08-04T13:30:00Z",
+  "updated_at": "2026-08-04T20:07:00Z",
+  "goal": "Agregar DXFInvalidLayerError en app/services/exceptions.py y su test correspondiente.",
+  "acceptance_criteria": [
+    "Excepcion DXFInvalidLayerError definida en exceptions.py",
+    "Test unitario en test_dxf_service.py verificando la excepcion"
+  ],
+  "retries": 0,
+  "approval_required": true,
+  "last_error": null,
+  "modified_files": [
+    "backend/app/services/exceptions.py",
+    "backend/tests/test_dxf_service.py"
+  ],
+  "implementation": {
+    "branch": "agent/dev/task-0002",
+    "tests": {
+      "total": 12,
+      "passed": 12,
+      "new_parametrized": 3,
+      "regression": "2/2 (test_layouts_api.py)"
+    },
+    "lint": "ruff check OK (all checks passed) en archivos modificados",
+    "retries": 0,
+    "notes": "Solo ruff check . global reporta 27 errores preexistentes en crear_plantilla.py (fuera de scope). exceptions.py y test_dxf_service.py limpios."
+  },
+  "plan": {
+    "path": "reports/plans/task-0002-plan.md",
+    "scope": "minimal",
+    "decisions": [
+      "DXFInvalidLayerError hereda de DXFExportError",
+      "Solo definicion + test, sin integracion en dxf_service.py",
+      "Un test parametrizado con 3 casos (missing, reserved, duplicated)"
+    ]
+  },
+  "qa": {
+    "verdict": "APPROVED",
+    "tests": {
+      "total": 12,
+      "passed": 12,
+      "failed": 0,
+      "new_parametrized": 3,
+      "regression": "2/2 (test_layouts_api.py)",
+      "duration_s": 0.67
+    },
+    "lint": "ruff check OK (all checks passed) en archivos modificados",
+    "report_path": "reports/qa/task-0002-qa.md",
+    "retries": 0,
+    "findings": [
+      "Jerarquia coherente: DXFInvalidLayerError hereda de DXFExportError",
+      "Defaults consistentes: subclase sobreescribe message con default vacio",
+      "Test parametrizado estable: asertos sobre substrings",
+      "Cero reintentos: ejecucion verde al primer intento",
+      "Deuda tecnica: excepcion definida pero no lanzada desde dxf_service (por scope)"
+    ]
+  }
+}

@@ -7,8 +7,9 @@ import math
 import ezdxf
 from ezdxf.enums import TextEntityAlignment
 
+from app.schemas.dxf_validation import DXFValidationResponse
 from app.schemas.layout_v1 import LayoutV1Response
-from app.services.exceptions import DXFExportError
+from app.services.exceptions import DXFEmptyDocumentError, DXFExportError
 
 # ezdxf exposes DXFError at the top-level namespace; fall back to the lldxf
 # location for older versions where it is not re-exported.
@@ -276,6 +277,24 @@ class DXFExporter:
                         dxfattribs={"layer": "MEP-ELECTRICA"},
                     )
 
+            # ─── Empty document guard (task-0004) ────────────────────
+            # Abort early if NO entity was generated. MEP nodes always draw
+            # as circles, so include them in the count.
+            total_generated = (
+                (len(layout.ambientes) - len(skipped.get("rooms", [])))
+                + (len(layout.muros_y_columnas.muros) - len(skipped.get("walls", [])))
+                + (len(layout.mobiliario) - len(skipped.get("furniture", [])))
+                + len(layout.instalaciones_MEP.electrica.puntos)
+                + len(san.nodos_agua)
+                + len(san.nodos_desague)
+            )
+            if total_generated == 0:
+                logger.error("DXF export produced an empty document (no valid entities)")
+                raise DXFEmptyDocumentError(
+                    message="DXF export produced an empty document",
+                    expected_count=0,
+                )
+
             # ─── Write to BytesIO ─────────────────────────────────────
             text_stream = io.StringIO()
             doc.write(text_stream)
@@ -317,3 +336,38 @@ def _furniture_dims(block_type: str) -> tuple[float, float]:
         "otro": (0.60, 0.60),
     }
     return dims.get(block_type, (0.60, 0.60))
+
+
+def validate_dxf(layout: LayoutV1Response) -> DXFValidationResponse:
+    """Validate a layout and return a structured DXFValidationResponse.
+
+    This function is independent from ``DXFExporter.generate_dxf`` and does not
+    raise exceptions: it returns a response with ``estado='invalido'`` and a
+    descriptive ``mensaje`` when any business rule fails.
+
+    Business rules:
+        - ``coordenadas_terreno.vertices`` must contain at least 3 vertices.
+        - ``ambientes`` must contain at least 1 room.
+        - ``muros_y_columnas.muros`` must contain at least 1 wall.
+    """
+    motivos: list[str] = []
+    if len(layout.coordenadas_terreno.vertices) < 3:
+        motivos.append("terreno requiere >=3 vertices")
+    if not layout.ambientes:
+        motivos.append("sin ambientes")
+    if not layout.muros_y_columnas.muros:
+        motivos.append("sin muros")
+
+    if motivos:
+        return DXFValidationResponse(
+            estado="invalido",
+            mensaje="; ".join(motivos),
+            project_id=layout.project_id,
+            timestamp_utc=layout.timestamp_utc,
+        )
+    return DXFValidationResponse(
+        estado="ok",
+        mensaje="Layout valido",
+        project_id=layout.project_id,
+        timestamp_utc=layout.timestamp_utc,
+    )

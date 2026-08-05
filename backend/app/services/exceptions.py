@@ -34,3 +34,41 @@ class DXFExportError(Exception):
         if self.failed_entities:
             return f"{self.message} (failed: {', '.join(self.failed_entities)})"
         return self.message
+
+
+@dataclass
+class DXFInvalidLayerError(DXFExportError):
+    """Raised when a DXF layer reference is invalid or not found.
+
+    Attributes:
+        message: Human-readable description inherited from DXFExportError.
+        layer_name: Name of the invalid/missing DXF layer.
+        reason: Why the layer is invalid ('missing', 'reserved', 'duplicated', etc.).
+    """
+    message: str = ""
+    layer_name: str = ""
+    reason: str = ""
+
+    def __str__(self) -> str:
+        base = super().__str__()
+        if self.layer_name:
+            return f"{base} [layer={self.layer_name!r}, reason={self.reason!r}]"
+        return base
+
+
+@dataclass
+class DXFEmptyDocumentError(DXFExportError):
+    """Raised when a DXF export produces an empty document (no valid entities).
+
+    Attributes:
+        message: Inherited from DXFExportError.
+        failed_entities: Inherited; typically [] for this error.
+        expected_count: Total entities the exporter attempted before declaring empty.
+    """
+    message: str = ""
+    failed_entities: list[str] = field(default_factory=list)
+    expected_count: int = 0
+
+    def __str__(self) -> str:
+        base = super().__str__()
+        return f"{base} [expected={self.expected_count}]"

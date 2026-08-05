@@ -6,3 +6,14 @@ dist/
 .env*
 .venv/
 **/.venv/
+
+# Entorno de operaciones agénticas temporales (.ops)
+.ops/logs/*
+.ops/artifacts/*
+.ops/locks/*
+.ops/locks/*.lock
+!.ops/logs/.gitkeep
+!.ops/locks/.gitkeep
+!.ops/artifacts/.gitkeep
+!.ops/approvals/.gitkeep
+!.ops/queue/.gitkeep

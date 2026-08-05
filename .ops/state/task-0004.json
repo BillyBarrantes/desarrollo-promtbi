@@ -1,0 +1,70 @@
+{
+  "task_id": "task-0004",
+  "title": "Validar manejo de archivos DXF vacios o sin capas",
+  "repo": "desarrollo-promtbi",
+  "status": "done",
+  "current_agent": "human",
+  "created_at": "2026-08-04T13:30:00Z",
+  "updated_at": "2026-08-05T01:36:18Z",
+  "goal": "Lanzar excepcion limpia si el documento DXF no contiene entidades validas.",
+  "acceptance_criteria": [
+    "Captura de documentos vacios sin crash",
+    "Suite de tests cubriendo el caso borde"
+  ],
+  "retries": 0,
+  "approval_required": true,
+  "last_error": null,
+  "modified_files": [
+    "backend/app/services/exceptions.py",
+    "backend/app/services/dxf_service.py",
+    "backend/tests/test_dxf_service.py"
+  ],
+  "implementation": {
+    "branch": "agent/dev/task-0004",
+    "tests": {
+      "total": 18,
+      "passed": 18,
+      "new": 1,
+      "regression": "2/2 (test_layouts_api.py)"
+    },
+    "lint": "ruff check OK (all checks passed) en archivos modificados",
+    "retries": 0,
+    "notes": "Guard insertado antes de doc.write para evitar serializar documento vacio. DXFEmptyDocumentError hereda de DXFExportError y no es capturado por el except (DXFError, ValueError, IndexError)."
+  },
+  "plan": {
+    "path": "reports/plans/task-0004-plan.md",
+    "scope": "minimal",
+    "target_files": [
+      "backend/app/services/exceptions.py",
+      "backend/app/services/dxf_service.py",
+      "backend/tests/test_dxf_service.py"
+    ],
+    "decisions": [
+      "Alcance: documento DXF resultante vacio (layout de entrada no produce entidades)",
+      "Excepcion nueva DXFEmptyDocumentError hereda de DXFExportError",
+      "Condicion de disparo: lanzar solo si NINGUNA entidad valida fue generada",
+      "Suite: 1 test enfocado en layout totalmente vacio"
+    ]
+  },
+  "qa": {
+    "verdict": "APPROVED",
+    "tests": {
+      "total": 18,
+      "passed": 18,
+      "failed": 0,
+      "new": 1,
+      "regression": "2/2 (test_layouts_api.py)",
+      "duration_s": 0.99
+    },
+    "lint": "ruff check OK (all checks passed) en archivos modificados",
+    "report_path": "reports/qa/task-0004-qa.md",
+    "retries": 0,
+    "findings": [
+      "Guard insertado antes de doc.write (evita serializar documento vacio)",
+      "DXFEmptyDocumentError no capturada por except (DXFError, ValueError, IndexError)",
+      "Contador total_generated inclusivo (MEP nodos + puntos electricos cuentan)",
+      "Test usa mutacion en memoria (patron consistente con task-0001 y task-0003)",
+      "Dev-worker verde al primer intento (0 reintentos)"
+    ]
+  }
+}

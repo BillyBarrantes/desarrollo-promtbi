@@ -1,0 +1,18 @@
+{
+  "task_id": "task-XXXX",
+  "title": "TITULO_DE_LA_TAREA",
+  "repo": "desarrollo-promtbi",
+  "status": "new",
+  "current_agent": "planner",
+  "created_at": "YYYY-MM-DDTHH:MM:SSZ",
+  "updated_at": "YYYY-MM-DDTHH:MM:SSZ",
+  "goal": "OBJETIVO_TECNICO_O_FUNCIONAL",
+  "acceptance_criteria": [
+    "Criterio 1",
+    "Criterio 2"
+  ],
+  "retries": 0,
+  "approval_required": true,
+  "last_error": null,
+  "modified_files": []
+}

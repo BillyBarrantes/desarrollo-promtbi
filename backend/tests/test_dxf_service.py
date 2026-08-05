@@ -12,9 +12,14 @@ from typing import Any
 
 import pytest
 
+from app.schemas.dxf_validation import DXFValidationResponse
 from app.schemas.layout_v1 import LayoutV1Response
-from app.services.dxf_service import DXFExporter
-from app.services.exceptions import DXFExportError
+from app.services.dxf_service import DXFExporter, validate_dxf
+from app.services.exceptions import (
+    DXFEmptyDocumentError,
+    DXFExportError,
+    DXFInvalidLayerError,
+)
 
 
 def _base_payload() -> dict[str, Any]:
@@ -328,3 +333,99 @@ def test_export_orphan_mep_tramos(exporter: DXFExporter, caplog: pytest.LogCaptu
     data = stream.read()
     assert len(data) > 0
     assert any("mep_tramos" in r.message and "t_orphan" in r.message for r in caplog.records)
+
+
+# ─── Test 8 — DXFInvalidLayerError (task-0002) ─────────────────────────────
+@pytest.mark.parametrize(
+    "layer_name, reason, expected_substring",
+    [
+        ("ARQ-INEXISTENTE", "missing", "ARQ-INEXISTENTE"),
+        ("0", "reserved", "layer='0'"),
+        ("MEP-FUENTES", "duplicated", "duplicated"),
+    ],
+)
+def test_dxf_invalid_layer_error(layer_name, reason, expected_substring):
+    err = DXFInvalidLayerError(
+        message="invalid layer",
+        layer_name=layer_name,
+        reason=reason,
+    )
+    # (a) Atributos preservados
+    assert err.layer_name == layer_name
+    assert err.reason == reason
+    # (b) str() contiene substring esperado
+    assert expected_substring in str(err)
+    # (c) Es subclase de DXFExportError (captura generica)
+    assert isinstance(err, DXFExportError)
+
+
+# ─── Tests 9-13 — validate_dxf (task-0003) ─────────────────────────────────
+def test_validate_dxf_ok():
+    layout = _build_layout()
+    response = validate_dxf(layout)
+    assert response.estado == "ok"
+    assert response.mensaje == "Layout valido"
+    assert response.project_id == layout.project_id
+    assert response.timestamp_utc == layout.timestamp_utc
+    assert isinstance(response, DXFValidationResponse)
+
+
+def test_validate_dxf_no_terrain():
+    layout = _build_layout()
+    layout.coordenadas_terreno.vertices.clear()
+    response = validate_dxf(layout)
+    assert response.estado == "invalido"
+    assert "terreno" in response.mensaje
+    assert response.project_id == layout.project_id
+
+
+def test_validate_dxf_no_rooms():
+    layout = _build_layout()
+    layout.ambientes.clear()
+    response = validate_dxf(layout)
+    assert response.estado == "invalido"
+    assert "ambientes" in response.mensaje
+    assert response.project_id == layout.project_id
+
+
+def test_validate_dxf_no_walls():
+    layout = _build_layout()
+    layout.muros_y_columnas.muros.clear()
+    response = validate_dxf(layout)
+    assert response.estado == "invalido"
+    assert "muros" in response.mensaje
+    assert response.project_id == layout.project_id
+
+
+def test_dxf_validation_response_schema_keys():
+    expected_keys = {"estado", "mensaje", "project_id", "timestamp_utc"}
+    actual_keys = set(DXFValidationResponse.model_fields.keys())
+    assert actual_keys == expected_keys, f"Unexpected keys: {actual_keys ^ expected_keys}"
+
+
+# ─── Test 16 — DXFEmptyDocumentError (task-0004) ────────────────────────────
+def test_export_with_empty_layout_raises_dxf_empty_document_error(exporter: DXFExporter):
+    """A layout that produces no valid DXF entities must raise DXFEmptyDocumentError."""
+    layout = _build_layout()
+    # Vaciamos todas las colecciones de entidades que generan elementos DXF.
+    layout.coordenadas_terreno.vertices.clear()  # < 3 → skipped
+    layout.ambientes.clear()
+    layout.muros_y_columnas.muros.clear()
+    layout.muros_y_columnas.columnas.clear()
+    layout.puertas_ventanas.puertas.clear()
+    layout.puertas_ventanas.ventanas.clear()
+    layout.mobiliario.clear()
+    # MEP nodos y puntos eléctricos también se vacían para que no dibujen círculos.
+    layout.instalaciones_MEP.sanitaria.nodos_agua.clear()
+    layout.instalaciones_MEP.sanitaria.nodos_desague.clear()
+    layout.instalaciones_MEP.sanitaria.tramos.clear()
+    layout.instalaciones_MEP.electrica.puntos.clear()
+
+    with pytest.raises(DXFEmptyDocumentError) as excinfo:
+        exporter.generate_dxf(layout)
+    # (a) La excepción es subclase de DXFExportError (jerarquía coherente)
+    assert isinstance(excinfo.value, DXFExportError)
+    # (b) Mensaje descriptivo
+    assert "empty document" in str(excinfo.value).lower()
+    # (c) expected_count Reporta 0 entidades generadas
+    assert excinfo.value.expected_count == 0
