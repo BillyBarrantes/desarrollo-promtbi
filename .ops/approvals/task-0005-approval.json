@@ -1,0 +1,7 @@
+{
+  "task_id": "task-0005",
+  "decision": "approved",
+  "approved_by": "Billy Barrantes",
+  "approved_at": "2026-08-09T02:09:29Z",
+  "scope": "Local merge of agent/dev/task-0005 into main. No push and no deployment."
+}
