@@ -6,7 +6,7 @@
   "requested_by": "system",
   "title": "Polish frontend UX and visual consistency",
   "goal": "Improve the existing frontend interface for the DXF layout workflow without changing backend behavior or API contracts.",
-  "status": "awaiting_approval",
+  "status": "released",
   "current_agent": "release-supervisor",
   "risk_level": "medium",
   "scope": {
@@ -94,7 +94,7 @@
     "reports/qa/task-0005-qa.md"
   ],
   "created_at": "2026-08-09T00:30:38Z",
-  "updated_at": "2026-08-09T01:58:53Z",
+  "updated_at": "2026-08-09T02:09:29.845198456Z",
   "branch": "agent/dev/task-0005",
   "qa": {
     "verdict": "approved_with_runner_observation",
@@ -114,5 +114,6 @@
     "verdict": "approved_with_observations",
     "reviewed_at": "2026-08-09T01:33:33Z",
     "summary": "Coherencia arquitectónica OK: separación frontend/backend intacta, contratos de API sin cambios (lib/api.ts y lib/types.ts intactos), modelos de datos coherentes. Mejoras reales de accesibilidad (skip-link, focus-visible, role/aria-live, alert/status) y responsive (breakpoints 1400/1120 preservados y mejorados con :not(.app-grid--iterate)). Diseño consistente con la dirección SaaS existente (tema claro CAD técnico). No bloqueante: (1) normalizar acentos en strings visibles (varios perdieron acentos en esta iteración), (2) emojis restantes inconsistentes (🤖 en ChatThread, ❌ en error), (3) duplicación del mapeo estado→badge en 3 componentes, (4) posible doble anuncio de live regions. Reporte completo en reports/architecture/task-0005-architecture.md. La tarea permanece awaiting_approval para aprobación humana."
-  }
+  },
+  "released_branch": "agent/dev/task-0005"
 }
