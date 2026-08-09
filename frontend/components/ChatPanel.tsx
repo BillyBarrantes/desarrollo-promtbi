@@ -12,6 +12,19 @@ import { ChatThread } from "@/components/ChatThread";
 
 type AppMode = "generate" | "iterate";
 
+export function statusBadgeClass(status: LayoutVersion["status"]): string {
+  switch (status) {
+    case "aprobado":
+      return "status-badge--ok";
+    case "observado":
+      return "status-badge--warn";
+    case "error":
+      return "status-badge--err";
+    default:
+      return "status-badge--err";
+  }
+}
+
 function generateVersionId(index: number): string {
   return `v${index + 1}`;
 }
@@ -70,7 +83,7 @@ export function ChatPanel() {
         setChatMessages([{
           id: `sys-${Date.now()}`,
           role: "system",
-          content: `✅ Plano generado y aprobado (${nextVersion.id}). Ahora puedes editar el plano con instrucciones en lenguaje natural.`,
+          content: `Plano generado y aprobado (${nextVersion.id}). Ahora puedes editar el plano con instrucciones en lenguaje natural.`,
           timestamp: new Date().toISOString(),
           versionId: nextVersion.id,
         }]);
@@ -174,7 +187,7 @@ export function ChatPanel() {
     const undoMessage: ChatMessage = {
       id: `undo-${Date.now()}`,
       role: "system",
-      content: `↩ Deshecho. Volviendo a ${versionStack[prevIndex].id}.`,
+      content: `Deshecho. Volviendo a ${versionStack[prevIndex].id}.`,
       timestamp: new Date().toISOString(),
       versionId: versionStack[prevIndex].id,
     };
@@ -192,42 +205,66 @@ export function ChatPanel() {
 
   // ─── RENDER ──────────────────────────────────────────────
   return (
-    <main className={`app-grid ${mode === "iterate" ? "app-grid--iterate" : ""}`}>
+    <main id="main-content" className={`app-grid ${mode === "iterate" ? "app-grid--iterate" : ""}`}>
       <aside className="panel">
-        <h2>Iteracion de Diseno</h2>
+        <h2>Diseño del layout</h2>
 
         {mode === "generate" ? (
           <form onSubmit={submitGenerate} className="form-grid">
-            <label htmlFor="projectId">Project ID</label>
-            <input id="projectId" value={projectId} onChange={(e) => setProjectId(e.target.value)} required />
+            <div>
+              <label className="field-label" htmlFor="projectId">
+                Project ID
+              </label>
+              <input
+                id="projectId"
+                className="field-input"
+                value={projectId}
+                onChange={(e) => setProjectId(e.target.value)}
+                required
+              />
+            </div>
 
-            <label htmlFor="prompt">Prompt tecnico</label>
-            <textarea
-              id="prompt"
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              rows={6}
-              placeholder="Describe requerimientos del ambiente con medidas y restricciones."
-              required
-            />
+            <div>
+              <label className="field-label" htmlFor="prompt">
+                Prompt tecnico
+              </label>
+              <textarea
+                id="prompt"
+                className="field-textarea"
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                rows={6}
+                placeholder="Describe requerimientos del ambiente con medidas y restricciones."
+                required
+              />
+            </div>
 
-            <label htmlFor="image">Boceto/plano (opcional)</label>
-            <input
-              id="image"
-              type="file"
-              accept="image/png,image/jpeg,image/webp"
-              onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
-            />
+            <div>
+              <label className="field-label" htmlFor="image">
+                Boceto/plano (opcional)
+              </label>
+              <input
+                id="image"
+                className="field-input"
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
+              />
+            </div>
 
-            <button type="submit" disabled={loading}>
+            <button type="submit" className="btn btn-primary" disabled={loading}>
               {loading ? "Procesando..." : "Generar propuesta"}
             </button>
           </form>
         ) : (
           <div className="iterate-info">
-            <p className="iterate-badge">✏️ Modo Edición</p>
-            <p>Editando: <strong>{projectId}</strong></p>
-            <p>Versión actual: <strong>{currentVersion?.id ?? "—"}</strong></p>
+            <p className="iterate-badge">Modo Edicion</p>
+            <p>
+              Editando: <strong>{projectId}</strong>
+            </p>
+            <p>
+              Version actual: <strong>{currentVersion?.id ?? "—"}</strong>
+            </p>
             <button type="button" className="back-to-generate" onClick={handleBackToGenerate}>
               ← Nuevo plano
             </button>
@@ -236,25 +273,25 @@ export function ChatPanel() {
 
         <div className="layer-panel">
           <h3>Capas de dibujo</h3>
-          <label>
+          <label className="check-row">
             <input type="checkbox" checked={layers.architecture} onChange={(e) => setLayers((c) => ({ ...c, architecture: e.target.checked }))} />
             Arquitectura
           </label>
-          <label>
+          <label className="check-row">
             <input type="checkbox" checked={layers.sanitary} onChange={(e) => setLayers((c) => ({ ...c, sanitary: e.target.checked }))} />
             Sanitaria
           </label>
-          <label>
+          <label className="check-row">
             <input type="checkbox" checked={layers.electrical} onChange={(e) => setLayers((c) => ({ ...c, electrical: e.target.checked }))} />
             Electrica
           </label>
-          <label>
+          <label className="check-row">
             <input type="checkbox" checked={layers.dimensions} onChange={(e) => setLayers((c) => ({ ...c, dimensions: e.target.checked }))} />
             Cotas
           </label>
         </div>
 
-        <div style={{ marginTop: 14 }}>
+        <div className="layer-panel">
           <VersionHistory
             versions={versionStack}
             selectedId={currentVersion?.id ?? null}
@@ -265,28 +302,47 @@ export function ChatPanel() {
 
       <section className="main-stack">
         <header className="panel">
-          <h1>ViPromt - Fase 5</h1>
-          <p>
+          <h1 className="app-header__title">
+            ViPromt
+            {currentVersion && (
+              <span className={`status-badge ${statusBadgeClass(currentVersion.status)}`}>
+                {currentVersion.status}
+              </span>
+            )}
+          </h1>
+          <p className="app-header__sub">
             {mode === "generate"
-              ? "Dibujo tecnico 2D por capas, conectado a backend local 8003."
-              : "Edición conversacional — modifica el plano con instrucciones."}
+              ? "Dibujo tecnico 2D por capas, conectado a backend local."
+              : "Edicion conversacional — modifica el plano con instrucciones."}
           </p>
-          {currentVersion && <p>Version seleccionada: {currentVersion.id}</p>}
+          {currentVersion && (
+            <p className="app-header__sub app-header__meta">Version seleccionada: {currentVersion.id}</p>
+          )}
         </header>
 
         <div className="panel">
           <h3>Prompt de la iteracion</h3>
-          <p>{currentVersion?.prompt ?? "Sin prompt seleccionado."}</p>
-          {currentVersion?.error && <p style={{ color: "var(--err)" }}>{currentVersion.error}</p>}
+          {currentVersion?.prompt ? (
+            <p className="prompt-text">{currentVersion.prompt}</p>
+          ) : (
+            <p className="empty-state">Aun no hay una propuesta generada.</p>
+          )}
+          {currentVersion?.error && (
+            <div role="alert" className="alert alert--error alert-block">
+              <span className="alert__title">No se pudo procesar la solicitud</span>
+              <span>{currentVersion.error}</span>
+            </div>
+          )}
           {currentVersion?.rejection && (
-            <>
-              <p style={{ color: "var(--warn)" }}>{currentVersion.rejection.message}</p>
+            <div role="alert" className="alert alert--warn alert-block">
+              <span className="alert__title">{currentVersion.rejection.message}</span>
+              <span>Alternativas para continuar:</span>
               <ul>
                 {currentVersion.rejection.alternativas.map((alt) => (
                   <li key={alt}>{alt}</li>
                 ))}
               </ul>
-            </>
+            </div>
           )}
         </div>
 
@@ -307,7 +363,7 @@ export function ChatPanel() {
 
       {mode === "iterate" && (
         <aside className="chat-panel">
-          <h3>Chat de Edición</h3>
+          <h3>Chat de Edicion</h3>
           <ChatThread
             messages={chatMessages}
             loading={loading}
@@ -317,6 +373,10 @@ export function ChatPanel() {
           />
         </aside>
       )}
+
+      <div aria-live="polite" className="visually-hidden">
+        {loading ? "Procesando solicitud..." : "Listo."}
+      </div>
     </main>
   );
 }

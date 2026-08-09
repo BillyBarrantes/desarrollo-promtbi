@@ -30,10 +30,16 @@ export function ChatThread({ messages, loading, onSend, onUndo, canUndo }: Props
 
     return (
         <div className="chat-thread">
-            <div className="chat-messages" ref={scrollRef}>
+            <div
+                className="chat-messages"
+                ref={scrollRef}
+                role="log"
+                aria-live="polite"
+                aria-label="Historial de la conversacion"
+            >
                 {messages.length === 0 && (
                     <div className="chat-empty">
-                        <p>💬 Escribe una instrucción para editar el plano actual.</p>
+                        <p>Escribe una instrucción para editar el plano actual.</p>
                         <p className="chat-hint">Ej: &quot;Mueve el baño al frente&quot;, &quot;Agranda el dormitorio&quot;</p>
                     </div>
                 )}
@@ -50,7 +56,7 @@ export function ChatThread({ messages, loading, onSend, onUndo, canUndo }: Props
                     </div>
                 ))}
                 {loading && (
-                    <div className="chat-bubble chat-assistant">
+                    <div className="chat-bubble chat-assistant" aria-busy="true">
                         <div className="chat-bubble-header">🤖 ViPromt</div>
                         <div className="chat-bubble-content chat-typing">
                             <span></span><span></span><span></span> Editando plano...
@@ -60,7 +66,7 @@ export function ChatThread({ messages, loading, onSend, onUndo, canUndo }: Props
             </div>
             <form className="chat-input-bar" onSubmit={handleSubmit}>
                 {canUndo && (
-                    <button type="button" className="chat-undo-btn" onClick={onUndo} title="Deshacer último cambio">
+                    <button type="button" className="chat-undo-btn" onClick={onUndo} aria-label="Deshacer ultimo cambio" title="Deshacer ultimo cambio">
                         ↩
                     </button>
                 )}
@@ -71,8 +77,9 @@ export function ChatThread({ messages, loading, onSend, onUndo, canUndo }: Props
                     placeholder="Instrucción de edición..."
                     disabled={loading}
                     className="chat-input"
+                    aria-label="Instruccion de edicion"
                 />
-                <button type="submit" disabled={loading || !input.trim()} className="chat-send-btn">
+                <button type="submit" disabled={loading || !input.trim()} className="chat-send-btn" aria-label="Enviar instruccion">
                     {loading ? "..." : "→"}
                 </button>
             </form>

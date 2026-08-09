@@ -1,12 +1,14 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { CADBlock } from "@/components/CADBlocks";
 import { LayoutV1, Point2D } from "@/lib/types";
 
 const VIEW_W = 1200;
 const PAD = 40;
+
+type ExportState = "idle" | "loading" | "success" | "error";
 
 type LayerState = {
   architecture: boolean;
@@ -38,6 +40,8 @@ function computeViewHeight(
 
 export function Plan2DSVG({ layout, layers }: Props) {
   const svgRef = useRef<SVGSVGElement | null>(null);
+  const [exportState, setExportState] = useState<ExportState>("idle");
+  const [exportMessage, setExportMessage] = useState<string | null>(null);
   const debugMode = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("debug") === "1";
 
   const marginsM = useMemo(
@@ -67,39 +71,61 @@ export function Plan2DSVG({ layout, layers }: Props) {
   return (
     <section>
       <h3>Plano 2D Tecnico CAD</h3>
-      <button type="button" onClick={() => exportSvg(svgRef.current)} disabled={!layout}>
-        Exportar SVG
-      </button>
-      <button
-        type="button"
-        disabled={!layout}
-        onClick={async () => {
-          if (!layout) return;
-          try {
-            const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8003";
-            const res = await fetch(`${apiBase}/api/v1/layouts/export/dxf`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(layout),
-            });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const blob = await res.blob();
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `plano_vipromt_${Date.now()}.dxf`;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            URL.revokeObjectURL(url);
-          } catch (err) {
-            console.error("DXF export failed:", err);
-            alert("Error al exportar DXF. Revisa la consola.");
-          }
-        }}
-      >
-        📥 Exportar AutoCAD (.DXF)
-      </button>
+      <div className="export-bar">
+        <button
+          type="button"
+          className="btn btn-secondary btn-sm"
+          onClick={() => exportSvg(svgRef.current)}
+          disabled={!layout}
+        >
+          Exportar SVG
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary btn-sm"
+          disabled={!layout || exportState === "loading"}
+          onClick={async () => {
+            if (!layout) return;
+            setExportState("loading");
+            setExportMessage("Exportando DXF...");
+            try {
+              const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8003";
+              const res = await fetch(`${apiBase}/api/v1/layouts/export/dxf`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(layout),
+              });
+              if (!res.ok) throw new Error(`HTTP ${res.status}`);
+              const blob = await res.blob();
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = `plano_vipromt_${Date.now()}.dxf`;
+              document.body.appendChild(a);
+              a.click();
+              a.remove();
+              URL.revokeObjectURL(url);
+              setExportState("success");
+              setExportMessage("Archivo DXF exportado correctamente.");
+            } catch (err) {
+              console.error("DXF export failed:", err);
+              setExportState("error");
+              setExportMessage("Error al exportar DXF. Revisa la consola.");
+            }
+          }}
+        >
+          {exportState === "loading" ? "Exportando..." : "Exportar AutoCAD (.DXF)"}
+        </button>
+      </div>
+      {exportMessage && (
+        <p
+          role="status"
+          aria-live="polite"
+          className={`export-status export-status--${exportState}`}
+        >
+          {exportMessage}
+        </p>
+      )}
       <div className="svg-shell">
         <svg ref={svgRef} viewBox={`0 0 ${VIEW_W} ${viewH}`} className="plan-svg" aria-label="Plano CAD 2D">
           <defs>
