@@ -17,3 +17,13 @@ dist/
 !.ops/artifacts/.gitkeep
 !.ops/approvals/.gitkeep
 !.ops/queue/.gitkeep
+
+# Python caches and test artifacts
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+**/.pytest_cache/
+
+# Playwright artifacts
+frontend/playwright-report/
+frontend/test-results/
