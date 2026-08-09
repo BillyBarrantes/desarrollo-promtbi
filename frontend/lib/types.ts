@@ -83,7 +83,8 @@ export interface LayoutV1 {
   };
   mobiliario: Array<{
     id: string;
-    block_type: "cama" | "inodoro" | "lavabo" | "mesa" | "auto" | "sofa" | "cocina" | "ducha" | "otro";
+    block_type:
+      "cama" | "inodoro" | "lavabo" | "mesa" | "auto" | "sofa" | "cocina" | "ducha" | "otro";
     insertion: Point2D;
     rotation_deg: number;
     scale: number;
@@ -105,7 +106,11 @@ export interface LayoutV1 {
     };
     electrica: {
       tablero_general: { id: string; ubicacion: Point2D; amperaje_principal: number };
-      circuitos: Array<{ id: string; tipo: "iluminacion" | "tomacorriente" | "fuerza"; breaker_a: number }>;
+      circuitos: Array<{
+        id: string;
+        tipo: "iluminacion" | "tomacorriente" | "fuerza";
+        breaker_a: number;
+      }>;
       puntos: Array<{
         id: string;
         tipo: "luminaria" | "interruptor" | "tomacorriente" | "salida_especial";

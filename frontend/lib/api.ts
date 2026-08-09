@@ -32,7 +32,11 @@ export async function generateLayout(params: {
 
   const data = await safeJson(response);
   if (!response.ok) {
-    throw new ApiError(`Backend request failed with status ${response.status}`, response.status, data);
+    throw new ApiError(
+      `Backend request failed with status ${response.status}`,
+      response.status,
+      data,
+    );
   }
 
   return data as LayoutV1;
@@ -57,7 +61,11 @@ export async function iterateLayout(params: {
 
   const data = await safeJson(response);
   if (!response.ok) {
-    throw new ApiError(`Iterate request failed with status ${response.status}`, response.status, data);
+    throw new ApiError(
+      `Iterate request failed with status ${response.status}`,
+      response.status,
+      data,
+    );
   }
 
   return data as IterateResponse;
@@ -88,4 +96,3 @@ async function safeJson(response: Response): Promise<unknown> {
     return { detail: "Invalid JSON response" };
   }
 }
-

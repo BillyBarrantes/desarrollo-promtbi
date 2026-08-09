@@ -52,11 +52,15 @@ export function ValidationPanel({ validation }: Props) {
         </div>
         <div className="stat-card">
           <div className="stat-card__label">Cumple</div>
-          <div className="stat-card__value stat-card__value--accent">{validation.resumen.cumple}</div>
+          <div className="stat-card__value stat-card__value--accent">
+            {validation.resumen.cumple}
+          </div>
         </div>
         <div className="stat-card">
           <div className="stat-card__label">No cumple</div>
-          <div className="stat-card__value stat-card__value--err">{validation.resumen.no_cumple}</div>
+          <div className="stat-card__value stat-card__value--err">
+            {validation.resumen.no_cumple}
+          </div>
         </div>
         <div className="stat-card">
           <div className="stat-card__label">No aplica</div>
@@ -69,7 +73,9 @@ export function ValidationPanel({ validation }: Props) {
         {validation.reglas_evaluadas.map((rule) => (
           <li key={rule.rule_id} className="rule-item">
             <div className="rule-item__head">
-              <span className={`rule-item__badge ${ruleBadgeClass(rule.resultado)}`}>{rule.resultado}</span>
+              <span className={`rule-item__badge ${ruleBadgeClass(rule.resultado)}`}>
+                {rule.resultado}
+              </span>
               <span className="rule-item__id">{rule.rule_id}</span>
               <span className="rule-item__categoria">{rule.categoria}</span>
             </div>
@@ -77,7 +83,12 @@ export function ValidationPanel({ validation }: Props) {
             {rule.valor_normativo != null && (
               <p className="rule-item__evidence">
                 Normativo: <strong>{rule.valor_normativo}</strong>
-                {rule.valor_observado != null && <> | Observado: <strong>{rule.valor_observado}</strong></>}
+                {rule.valor_observado != null && (
+                  <>
+                    {" "}
+                    | Observado: <strong>{rule.valor_observado}</strong>
+                  </>
+                )}
               </p>
             )}
           </li>

@@ -4,7 +4,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "ViPromt - Diseño Arquitectónico CAD",
-  description: "Interfaz conversacional para generar, iterar y exportar layouts arquitectónicos CAD 2D/3D mediante lenguaje natural.",
+  description:
+    "Interfaz conversacional para generar, iterar y exportar layouts arquitectónicos CAD 2D/3D mediante lenguaje natural.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
