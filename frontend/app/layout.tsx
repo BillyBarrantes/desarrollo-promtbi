@@ -3,14 +3,19 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ViPromt - Fase 3",
-  description: "Interfaz conversacional y tecnica para generar propuestas arquitectonicas.",
+  title: "ViPromt - Diseño Arquitectónico CAD",
+  description: "Interfaz conversacional para generar, iterar y exportar layouts arquitectónicos CAD 2D/3D mediante lenguaje natural.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body>
+        <a href="#main-content" className="skip-link">
+          Saltar al contenido principal
+        </a>
+        {children}
+      </body>
     </html>
   );
 }

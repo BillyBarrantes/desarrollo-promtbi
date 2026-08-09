@@ -1,0 +1,118 @@
+{
+  "schema_version": 2,
+  "task_id": "task-0005",
+  "project_id": "desarrollo-promtbi-main",
+  "workspace_root": "/srv/agentic/projects/desarrollo-promtbi-main",
+  "requested_by": "system",
+  "title": "Polish frontend UX and visual consistency",
+  "goal": "Improve the existing frontend interface for the DXF layout workflow without changing backend behavior or API contracts.",
+  "status": "awaiting_approval",
+  "current_agent": "release-supervisor",
+  "risk_level": "medium",
+  "scope": {
+    "allowed_paths": [
+      "frontend/"
+    ],
+    "forbidden_paths": [
+      ".git/",
+      ".env",
+      "secrets/",
+      "infra/production/",
+      "backend/",
+      "backend/**"
+    ]
+  },
+  "acceptance_criteria": [
+    "The existing frontend workflow remains functional from input through result display.",
+    "The interface has consistent spacing, typography, colors, borders, states, and responsive behavior.",
+    "Loading, empty, success, validation-error, and unexpected-error states are clearly communicated.",
+    "The design remains accessible with keyboard navigation, visible focus states, readable contrast, and labeled interactive controls.",
+    "No backend source file, API contract, environment file, secret, or production infrastructure file is modified.",
+    "The final diff is limited to frontend/ and includes no generated artifacts."
+  ],
+  "required_checks": [
+    "Run the frontend lint check if configured.",
+    "Run the frontend build check if configured.",
+    "Review git diff --check.",
+    "Review git diff --name-only and confirm every changed path starts with frontend/."
+  ],
+  "approval_required": true,
+  "retries": 1,
+  "last_error": null,
+  "implementation": {
+    "branch": "agent/dev/task-0005",
+    "summary": "Polish de UX y visual sin tocar API: tokens de diseño, espaciado/tipografía consistentes, botones, badges de estado, alertas (success/warn/error), estados vacíos, foco visible, skip-link, regiones live ARIA y feedback de exportación DXF.",
+    "notes": [
+      "Solo se modificaron archivos bajo frontend/.",
+      "lib/api.ts y lib/types.ts NO cambiaron: contratos de API intactos.",
+      ".opencode/opencode.jsonc aparece modificado en el working tree pero es un cambio previo del setup del entorno; no fue tocado por este worker.",
+      "tsconfig.tsbuildinfo y .DS_Store (tracked) quedaron sin cambios; el diff no incluye artefactos generados.",
+      "Lint/build solo reportaron avisos preexistentes (canRedo en ChatPanel y helpers sin uso en Plan2DSVG); 0 errores."
+    ]
+  },
+  "checks": {
+    "lint": {
+      "command": "npm run lint",
+      "result": "pass",
+      "exit": 0,
+      "detail": "next lint: 0 errores; warnings preexistentes en código no tocado (canRedo en ChatPanel, helpers sin uso en Plan2DSVG)."
+    },
+    "build": {
+      "command": "npm run build",
+      "result": "pass",
+      "exit": 0,
+      "detail": "next build 15.4.6: compilación y chequeo de tipos exitosos; ruta / estática generada (4/4 pages)."
+    },
+    "git_diff_check": {
+      "command": "git diff --check",
+      "result": "pass",
+      "exit": 0,
+      "detail": "Sin errores de whitespace ni conflict markers."
+    },
+    "git_diff_name_only": {
+      "command": "git diff --name-only",
+      "result": "pass",
+      "exit": 0,
+      "detail": "Todos los cambios de este worker están bajo frontend/. El único path foráneo (.opencode/opencode.jsonc) es preexistente del setup de entorno y no fue modificado por task-0005."
+    }
+  },
+  "modified_files": [
+    "frontend/app/globals.css",
+    "frontend/app/layout.tsx",
+    "frontend/components/ChatPanel.tsx",
+    "frontend/components/ChatThread.tsx",
+    "frontend/components/LayoutSummary.tsx",
+    "frontend/components/Plan2DCanvas.tsx",
+    "frontend/components/Plan2DSVG.tsx",
+    "frontend/components/ValidationPanel.tsx",
+    "frontend/components/VersionHistory.tsx"
+  ],
+  "artifacts": [
+    "reports/architecture/task-0005-architecture.md",
+    "reports/contract/task-0005-contract.md",
+    "reports/plans/task-0005-plan.md",
+    "reports/qa/task-0005-qa.md"
+  ],
+  "created_at": "2026-08-09T00:30:38Z",
+  "updated_at": "2026-08-09T01:58:53Z",
+  "branch": "agent/dev/task-0005",
+  "qa": {
+    "verdict": "approved_with_runner_observation",
+    "lint": "passed",
+    "build": "passed",
+    "diff_check": "passed",
+    "scope_check": "passed",
+    "runner_observation": "QA manual aprobado. npm run lint y npm run build pasan desde frontend/. El runner global falló únicamente por ejecutar npm test en la raíz sin package.json.",
+    "reviewed_at": "2026-08-09T01:18:39Z"
+  },
+  "contract_review": {
+    "verdict": "approved",
+    "reviewed_at": "2026-08-09T01:25:00Z",
+    "summary": "La tarea cambió únicamente presentación y accesibilidad del frontend. frontend/lib/api.ts y frontend/lib/types.ts sin cambios; contratos de API intactos. 9 archivos modificados todos bajo frontend/. Sin diff en backend/, env, secretos ni infraestructura. git diff --check limpio. Observación preexistente: .opencode/opencode.jsonc ($schema) es setup de entorno, no de task-0005."
+  },
+  "architect_review": {
+    "verdict": "approved_with_observations",
+    "reviewed_at": "2026-08-09T01:33:33Z",
+    "summary": "Coherencia arquitectónica OK: separación frontend/backend intacta, contratos de API sin cambios (lib/api.ts y lib/types.ts intactos), modelos de datos coherentes. Mejoras reales de accesibilidad (skip-link, focus-visible, role/aria-live, alert/status) y responsive (breakpoints 1400/1120 preservados y mejorados con :not(.app-grid--iterate)). Diseño consistente con la dirección SaaS existente (tema claro CAD técnico). No bloqueante: (1) normalizar acentos en strings visibles (varios perdieron acentos en esta iteración), (2) emojis restantes inconsistentes (🤖 en ChatThread, ❌ en error), (3) duplicación del mapeo estado→badge en 3 componentes, (4) posible doble anuncio de live regions. Reporte completo en reports/architecture/task-0005-architecture.md. La tarea permanece awaiting_approval para aprobación humana."
+  }
+}
