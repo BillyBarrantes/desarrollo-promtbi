@@ -81,13 +81,20 @@ export function Plan2DCanvas({ layout, layers }: Props) {
   return (
     <section>
       <h3>Plano 2D Tecnico</h3>
-      <button type="button" className="btn btn-secondary btn-sm" onClick={() => exportCanvas(canvasRef.current)} disabled={!layout}>
+      <button
+        type="button"
+        className="btn btn-secondary btn-sm"
+        onClick={() => exportCanvas(canvasRef.current)}
+        disabled={!layout}
+      >
         Exportar PNG
       </button>
       <div className="canvas-shell">
         <canvas ref={canvasRef} className="plan-canvas" aria-label="Plano tecnico 2D" />
       </div>
-      {!hasData && <p className="empty-state">Genera una propuesta para dibujar el plano tecnico.</p>}
+      {!hasData && (
+        <p className="empty-state">Genera una propuesta para dibujar el plano tecnico.</p>
+      )}
     </section>
   );
 }
@@ -387,10 +394,10 @@ function polygonCenter(vertices: Point2D[]): Point2D {
   if (vertices.length === 0) {
     return { x: 0, y: 0 };
   }
-  const sum = vertices.reduce(
-    (acc, point) => ({ x: acc.x + point.x, y: acc.y + point.y }),
-    { x: 0, y: 0 },
-  );
+  const sum = vertices.reduce((acc, point) => ({ x: acc.x + point.x, y: acc.y + point.y }), {
+    x: 0,
+    y: 0,
+  });
   return { x: sum.x / vertices.length, y: sum.y / vertices.length };
 }
 

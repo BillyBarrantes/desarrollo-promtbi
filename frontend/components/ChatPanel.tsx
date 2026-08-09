@@ -50,7 +50,8 @@ export function ChatPanel() {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 
   const currentVersion = useMemo(
-    () => (currentIndex >= 0 && currentIndex < versionStack.length ? versionStack[currentIndex] : null),
+    () =>
+      currentIndex >= 0 && currentIndex < versionStack.length ? versionStack[currentIndex] : null,
     [versionStack, currentIndex],
   );
 
@@ -80,13 +81,15 @@ export function ChatPanel() {
       // If approved, switch to iterate mode
       if (layout.validacion_RNE.estado_global === "aprobado") {
         setMode("iterate");
-        setChatMessages([{
-          id: `sys-${Date.now()}`,
-          role: "system",
-          content: `Plano generado y aprobado (${nextVersion.id}). Ahora puedes editar el plano con instrucciones en lenguaje natural.`,
-          timestamp: new Date().toISOString(),
-          versionId: nextVersion.id,
-        }]);
+        setChatMessages([
+          {
+            id: `sys-${Date.now()}`,
+            role: "system",
+            content: `Plano generado y aprobado (${nextVersion.id}). Ahora puedes editar el plano con instrucciones en lenguaje natural.`,
+            timestamp: new Date().toISOString(),
+            versionId: nextVersion.id,
+          },
+        ]);
       }
     } catch (error) {
       const nextVersionId = generateVersionId(versionStack.length);
@@ -164,9 +167,10 @@ export function ChatPanel() {
       };
       setChatMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
-      const errorMsg = error instanceof ApiError
-        ? `Error: ${error.status} — ${JSON.stringify((error.payload as { detail?: unknown })?.detail ?? "")}`
-        : "Error inesperado al editar el plano";
+      const errorMsg =
+        error instanceof ApiError
+          ? `Error: ${error.status} — ${JSON.stringify((error.payload as { detail?: unknown })?.detail ?? "")}`
+          : "Error inesperado al editar el plano";
       const errMessage: ChatMessage = {
         id: `err-${Date.now()}`,
         role: "system",
@@ -274,19 +278,35 @@ export function ChatPanel() {
         <div className="layer-panel">
           <h3>Capas de dibujo</h3>
           <label className="check-row">
-            <input type="checkbox" checked={layers.architecture} onChange={(e) => setLayers((c) => ({ ...c, architecture: e.target.checked }))} />
+            <input
+              type="checkbox"
+              checked={layers.architecture}
+              onChange={(e) => setLayers((c) => ({ ...c, architecture: e.target.checked }))}
+            />
             Arquitectura
           </label>
           <label className="check-row">
-            <input type="checkbox" checked={layers.sanitary} onChange={(e) => setLayers((c) => ({ ...c, sanitary: e.target.checked }))} />
+            <input
+              type="checkbox"
+              checked={layers.sanitary}
+              onChange={(e) => setLayers((c) => ({ ...c, sanitary: e.target.checked }))}
+            />
             Sanitaria
           </label>
           <label className="check-row">
-            <input type="checkbox" checked={layers.electrical} onChange={(e) => setLayers((c) => ({ ...c, electrical: e.target.checked }))} />
+            <input
+              type="checkbox"
+              checked={layers.electrical}
+              onChange={(e) => setLayers((c) => ({ ...c, electrical: e.target.checked }))}
+            />
             Electrica
           </label>
           <label className="check-row">
-            <input type="checkbox" checked={layers.dimensions} onChange={(e) => setLayers((c) => ({ ...c, dimensions: e.target.checked }))} />
+            <input
+              type="checkbox"
+              checked={layers.dimensions}
+              onChange={(e) => setLayers((c) => ({ ...c, dimensions: e.target.checked }))}
+            />
             Cotas
           </label>
         </div>
@@ -316,7 +336,9 @@ export function ChatPanel() {
               : "Edicion conversacional — modifica el plano con instrucciones."}
           </p>
           {currentVersion && (
-            <p className="app-header__sub app-header__meta">Version seleccionada: {currentVersion.id}</p>
+            <p className="app-header__sub app-header__meta">
+              Version seleccionada: {currentVersion.id}
+            </p>
           )}
         </header>
 
@@ -356,7 +378,11 @@ export function ChatPanel() {
 
         <div className="panel">
           <ValidationPanel
-            validation={currentVersion?.layout?.validacion_RNE ?? currentVersion?.rejection?.validacion_RNE ?? null}
+            validation={
+              currentVersion?.layout?.validacion_RNE ??
+              currentVersion?.rejection?.validacion_RNE ??
+              null
+            }
           />
         </div>
       </section>

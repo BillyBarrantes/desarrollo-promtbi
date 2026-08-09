@@ -42,7 +42,9 @@ export function Plan2DSVG({ layout, layers }: Props) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [exportState, setExportState] = useState<ExportState>("idle");
   const [exportMessage, setExportMessage] = useState<string | null>(null);
-  const debugMode = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("debug") === "1";
+  const debugMode =
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("debug") === "1";
 
   const marginsM = useMemo(
     () => estimateDimensionMargins(layout, layers.dimensions),
@@ -65,7 +67,11 @@ export function Plan2DSVG({ layout, layers }: Props) {
   }, [layout]);
   const openingMasks = useMemo(() => {
     if (!layout) return [];
-    return buildOpeningMasks(layout.puertas_ventanas.puertas, layout.puertas_ventanas.ventanas, wallById);
+    return buildOpeningMasks(
+      layout.puertas_ventanas.puertas,
+      layout.puertas_ventanas.ventanas,
+      wallById,
+    );
   }, [layout, wallById]);
 
   return (
@@ -127,12 +133,23 @@ export function Plan2DSVG({ layout, layers }: Props) {
         </p>
       )}
       <div className="svg-shell">
-        <svg ref={svgRef} viewBox={`0 0 ${VIEW_W} ${viewH}`} className="plan-svg" aria-label="Plano CAD 2D">
+        <svg
+          ref={svgRef}
+          viewBox={`0 0 ${VIEW_W} ${viewH}`}
+          className="plan-svg"
+          aria-label="Plano CAD 2D"
+        >
           <defs>
             <pattern id="cad-grid" width="20" height="20" patternUnits="userSpaceOnUse">
               <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#edf1f5" strokeWidth="1" />
             </pattern>
-            <pattern id="hatch-portante" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <pattern
+              id="hatch-portante"
+              width="6"
+              height="6"
+              patternUnits="userSpaceOnUse"
+              patternTransform="rotate(45)"
+            >
               <line x1="0" y1="0" x2="0" y2="6" stroke="#8b9cb3" strokeWidth="0.8" />
             </pattern>
           </defs>
@@ -142,9 +159,19 @@ export function Plan2DSVG({ layout, layers }: Props) {
 
           {layout ? (
             <>
-              {layers.architecture && <Terrain vertices={layout.coordenadas_terreno.vertices} toSvg={transform.toSvg} />}
-              {layers.architecture && <RoomsFill rooms={layout.ambientes} toSvg={transform.toSvg} />}
-              {layers.architecture && <Walls walls={layout.muros_y_columnas.muros} toSvg={transform.toSvg} scale={transform.scale} />}
+              {layers.architecture && (
+                <Terrain vertices={layout.coordenadas_terreno.vertices} toSvg={transform.toSvg} />
+              )}
+              {layers.architecture && (
+                <RoomsFill rooms={layout.ambientes} toSvg={transform.toSvg} />
+              )}
+              {layers.architecture && (
+                <Walls
+                  walls={layout.muros_y_columnas.muros}
+                  toSvg={transform.toSvg}
+                  scale={transform.scale}
+                />
+              )}
               {layers.architecture && (
                 <Openings
                   doors={layout.puertas_ventanas.puertas}
@@ -155,10 +182,24 @@ export function Plan2DSVG({ layout, layers }: Props) {
                 />
               )}
               {layers.architecture && (
-                <Furniture items={layout.mobiliario} toSvg={transform.toSvg} scale={transform.scale} />
+                <Furniture
+                  items={layout.mobiliario}
+                  toSvg={transform.toSvg}
+                  scale={transform.scale}
+                />
               )}
-              {layers.sanitary && <Sanitary nodes={layout.instalaciones_MEP.sanitaria.nodos_agua} toSvg={transform.toSvg} />}
-              {layers.sanitary && <Drain nodes={layout.instalaciones_MEP.sanitaria.nodos_desague} toSvg={transform.toSvg} />}
+              {layers.sanitary && (
+                <Sanitary
+                  nodes={layout.instalaciones_MEP.sanitaria.nodos_agua}
+                  toSvg={transform.toSvg}
+                />
+              )}
+              {layers.sanitary && (
+                <Drain
+                  nodes={layout.instalaciones_MEP.sanitaria.nodos_desague}
+                  toSvg={transform.toSvg}
+                />
+              )}
               {layers.electrical && (
                 <Electrical
                   panel={layout.instalaciones_MEP.electrica.tablero_general.ubicacion}
@@ -207,14 +248,25 @@ function Terrain({ vertices, toSvg }: { vertices: Point2D[]; toSvg: (p: Point2D)
   return <path d={d} fill="none" stroke="#2f3b4f" strokeWidth={1.2} />;
 }
 
-function RoomsFill({ rooms, toSvg }: { rooms: LayoutV1["ambientes"]; toSvg: (p: Point2D) => Point2D }) {
+function RoomsFill({
+  rooms,
+  toSvg,
+}: {
+  rooms: LayoutV1["ambientes"];
+  toSvg: (p: Point2D) => Point2D;
+}) {
   return (
     <g>
       {rooms.map((room) => {
         const d = polygonPath(room.vertices, toSvg);
         return (
           <g key={room.id}>
-            <path d={d} fill="rgba(100,116,139,0.02)" stroke="rgba(100,116,139,0.32)" strokeWidth={0.8} />
+            <path
+              d={d}
+              fill="rgba(100,116,139,0.02)"
+              stroke="rgba(100,116,139,0.32)"
+              strokeWidth={0.8}
+            />
           </g>
         );
       })}
@@ -232,7 +284,14 @@ function RoomLabels({
   toSvg: (p: Point2D) => Point2D;
 }) {
   // ─── Greedy Label Placer ───
-  interface LabelRect { x: number; y: number; w: number; h: number; fontSize: number; areaFontSize: number; }
+  interface LabelRect {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    fontSize: number;
+    areaFontSize: number;
+  }
 
   const rectsOverlap = (a: LabelRect, b: LabelRect): boolean =>
     a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
@@ -241,7 +300,7 @@ function RoomLabels({
     placed.some((p) => rectsOverlap(r, p));
 
   // Pre-compute label positions with anti-collision
-  const placements: { room: typeof rooms[number]; rect: LabelRect; cx: number }[] = [];
+  const placements: { room: (typeof rooms)[number]; rect: LabelRect; cx: number }[] = [];
   const placedRects: LabelRect[] = [];
 
   // Sort rooms by area descending — larger rooms get priority placement
@@ -259,13 +318,27 @@ function RoomLabels({
     const labelH = 48;
 
     // Try the centroid first
-    let bestRect: LabelRect = { x: c.x - labelW / 2, y: c.y - 22, w: labelW, h: labelH, fontSize, areaFontSize };
+    let bestRect: LabelRect = {
+      x: c.x - labelW / 2,
+      y: c.y - 22,
+      w: labelW,
+      h: labelH,
+      fontSize,
+      areaFontSize,
+    };
     let found = !overlapsAny(bestRect, placedRects);
 
     // If collides, try vertical offsets
     if (!found) {
       for (const dy of [-18, 18, -36, 36, -54, 54]) {
-        const candidate: LabelRect = { x: c.x - labelW / 2, y: c.y - 22 + dy, w: labelW, h: labelH, fontSize, areaFontSize };
+        const candidate: LabelRect = {
+          x: c.x - labelW / 2,
+          y: c.y - 22 + dy,
+          w: labelW,
+          h: labelH,
+          fontSize,
+          areaFontSize,
+        };
         if (!overlapsAny(candidate, placedRects)) {
           bestRect = candidate;
           found = true;
@@ -277,7 +350,14 @@ function RoomLabels({
     // If still collides, try horizontal offsets
     if (!found) {
       for (const dx of [-30, 30, -60, 60]) {
-        const candidate: LabelRect = { x: c.x - labelW / 2 + dx, y: c.y - 22, w: labelW, h: labelH, fontSize, areaFontSize };
+        const candidate: LabelRect = {
+          x: c.x - labelW / 2 + dx,
+          y: c.y - 22,
+          w: labelW,
+          h: labelH,
+          fontSize,
+          areaFontSize,
+        };
         if (!overlapsAny(candidate, placedRects)) {
           bestRect = candidate;
           found = true;
@@ -327,7 +407,13 @@ function RoomLabels({
             >
               {room.nombre}
             </text>
-            <text x={cx} y={rect.y + rect.h * 0.78} fontSize={rect.areaFontSize} fill="#475569" textAnchor="middle">
+            <text
+              x={cx}
+              y={rect.y + rect.h * 0.78}
+              fontSize={rect.areaFontSize}
+              fill="#475569"
+              textAnchor="middle"
+            >
               {areaText}
             </text>
           </g>
@@ -337,7 +423,15 @@ function RoomLabels({
   );
 }
 
-function Walls({ walls, toSvg, scale }: { walls: LayoutV1["muros_y_columnas"]["muros"]; toSvg: (p: Point2D) => Point2D; scale: number }) {
+function Walls({
+  walls,
+  toSvg,
+  scale,
+}: {
+  walls: LayoutV1["muros_y_columnas"]["muros"];
+  toSvg: (p: Point2D) => Point2D;
+  scale: number;
+}) {
   return (
     <g>
       {walls.map((wall) => {
@@ -394,7 +488,14 @@ function Openings({
               stroke="#fff"
               strokeWidth={Math.max(wall.espesor_m * scale + 2, 5)}
             />
-            <line x1={hingeSvg.x} y1={hingeSvg.y} x2={leafOpenSvg.x} y2={leafOpenSvg.y} stroke="#1f2937" strokeWidth={1.2} />
+            <line
+              x1={hingeSvg.x}
+              y1={hingeSvg.y}
+              x2={leafOpenSvg.x}
+              y2={leafOpenSvg.y}
+              stroke="#1f2937"
+              strokeWidth={1.2}
+            />
             <path
               d={`M ${leafClosedSvg.x} ${leafClosedSvg.y} A ${radius} ${radius} 0 0 ${sweepFlag} ${leafOpenSvg.x} ${leafOpenSvg.y}`}
               fill="none"
@@ -465,7 +566,13 @@ function Furniture({
   );
 }
 
-function Sanitary({ nodes, toSvg }: { nodes: LayoutV1["instalaciones_MEP"]["sanitaria"]["nodos_agua"]; toSvg: (p: Point2D) => Point2D }) {
+function Sanitary({
+  nodes,
+  toSvg,
+}: {
+  nodes: LayoutV1["instalaciones_MEP"]["sanitaria"]["nodos_agua"];
+  toSvg: (p: Point2D) => Point2D;
+}) {
   return (
     <g>
       {nodes.map((n) => {
@@ -476,7 +583,13 @@ function Sanitary({ nodes, toSvg }: { nodes: LayoutV1["instalaciones_MEP"]["sani
   );
 }
 
-function Drain({ nodes, toSvg }: { nodes: LayoutV1["instalaciones_MEP"]["sanitaria"]["nodos_desague"]; toSvg: (p: Point2D) => Point2D }) {
+function Drain({
+  nodes,
+  toSvg,
+}: {
+  nodes: LayoutV1["instalaciones_MEP"]["sanitaria"]["nodos_desague"];
+  toSvg: (p: Point2D) => Point2D;
+}) {
   return (
     <g>
       {nodes.map((n) => {
@@ -605,8 +718,14 @@ function Dimensions({
             key={`dbg-placed-${i}`}
             x={toSvg({ x: b.minX, y: b.maxY }).x}
             y={toSvg({ x: b.maxX, y: b.minY }).y}
-            width={Math.max(1, toSvg({ x: b.maxX, y: b.minY }).x - toSvg({ x: b.minX, y: b.maxY }).x)}
-            height={Math.max(1, toSvg({ x: b.minX, y: b.maxY }).y - toSvg({ x: b.maxX, y: b.minY }).y)}
+            width={Math.max(
+              1,
+              toSvg({ x: b.maxX, y: b.minY }).x - toSvg({ x: b.minX, y: b.maxY }).x,
+            )}
+            height={Math.max(
+              1,
+              toSvg({ x: b.minX, y: b.maxY }).y - toSvg({ x: b.maxX, y: b.minY }).y,
+            )}
             fill="rgba(217,70,239,0.08)"
             stroke="#d946ef"
             strokeWidth={0.6}
@@ -627,20 +746,22 @@ function chainHorizontal(
   if (refs.length < 2) return null;
   return (
     <g>
-      {refs.slice(0, -1).map((x0, i) =>
-        dimensionHorizontal(
-          x0,
-          refs[i + 1],
-          dimY - 0.14,
-          dimY,
-          toSvg,
-          `${keyPrefix}-${i}`,
-          false,
-          1,
-          debugMode,
-          constraints,
-        ),
-      )}
+      {refs
+        .slice(0, -1)
+        .map((x0, i) =>
+          dimensionHorizontal(
+            x0,
+            refs[i + 1],
+            dimY - 0.14,
+            dimY,
+            toSvg,
+            `${keyPrefix}-${i}`,
+            false,
+            1,
+            debugMode,
+            constraints,
+          ),
+        )}
     </g>
   );
 }
@@ -656,20 +777,22 @@ function chainVertical(
   if (refs.length < 2) return null;
   return (
     <g>
-      {refs.slice(0, -1).map((y0, i) =>
-        dimensionVertical(
-          y0,
-          refs[i + 1],
-          dimX - 0.14,
-          dimX,
-          toSvg,
-          `${keyPrefix}-${i}`,
-          false,
-          1,
-          debugMode,
-          constraints,
-        ),
-      )}
+      {refs
+        .slice(0, -1)
+        .map((y0, i) =>
+          dimensionVertical(
+            y0,
+            refs[i + 1],
+            dimX - 0.14,
+            dimX,
+            toSvg,
+            `${keyPrefix}-${i}`,
+            false,
+            1,
+            debugMode,
+            constraints,
+          ),
+        )}
     </g>
   );
 }
@@ -712,7 +835,11 @@ function dimensionHorizontal(
   const masks = constraints?.collisionMasks ?? [];
 
   let chosenLane = lane;
-  let chosenBoxes: { textBox: BoundingMask; segBox: BoundingMask; leaderBox: BoundingMask | null } | null = null;
+  let chosenBoxes: {
+    textBox: BoundingMask;
+    segBox: BoundingMask;
+    leaderBox: BoundingMask | null;
+  } | null = null;
   for (let shift = 0; shift <= maxShift; shift += 1) {
     const testLane = lane + shift;
     const labelDy = testLane * 14 + (isMinor ? 16 : 0);
@@ -730,11 +857,11 @@ function dimensionHorizontal(
     };
     const leaderBox = isMinor
       ? {
-        minX: mid.x - 1,
-        maxX: mid.x + 1,
-        minY: Math.min(mid.y - labelDy + 2, mid.y - 2),
-        maxY: Math.max(mid.y - labelDy + 2, mid.y - 2),
-      }
+          minX: mid.x - 1,
+          maxX: mid.x + 1,
+          minY: Math.min(mid.y - labelDy + 2, mid.y - 2),
+          maxY: Math.max(mid.y - labelDy + 2, mid.y - 2),
+        }
       : null;
     const union = mergeMasks([textBox, segBox, ...(leaderBox ? [leaderBox] : [])]);
     if (!union || !intersectsAny(union, masks)) {
@@ -750,11 +877,46 @@ function dimensionHorizontal(
     <g key={key}>
       <line x1={sa.x} y1={sa.y} x2={sda.x} y2={sda.y} stroke={stroke} strokeWidth={0.8} />
       <line x1={sb.x} y1={sb.y} x2={sdb.x} y2={sdb.y} stroke={stroke} strokeWidth={0.8} />
-      <line x1={sda.x} y1={lineY} x2={midX - gapHalf} y2={lineY} stroke={stroke} strokeWidth={0.9} />
-      <line x1={midX + gapHalf} y1={lineY} x2={sdb.x} y2={lineY} stroke={stroke} strokeWidth={0.9} />
-      <line x1={sda.x - tick} y1={sda.y - tick} x2={sda.x + tick} y2={sda.y + tick} stroke={stroke} strokeWidth={1} />
-      <line x1={sdb.x - tick} y1={sdb.y - tick} x2={sdb.x + tick} y2={sdb.y + tick} stroke={stroke} strokeWidth={1} />
-      <rect x={mid.x - boxW / 2} y={mid.y - 12 - labelDy} width={boxW} height={12} fill="#ffffff" opacity={0.95} />
+      <line
+        x1={sda.x}
+        y1={lineY}
+        x2={midX - gapHalf}
+        y2={lineY}
+        stroke={stroke}
+        strokeWidth={0.9}
+      />
+      <line
+        x1={midX + gapHalf}
+        y1={lineY}
+        x2={sdb.x}
+        y2={lineY}
+        stroke={stroke}
+        strokeWidth={0.9}
+      />
+      <line
+        x1={sda.x - tick}
+        y1={sda.y - tick}
+        x2={sda.x + tick}
+        y2={sda.y + tick}
+        stroke={stroke}
+        strokeWidth={1}
+      />
+      <line
+        x1={sdb.x - tick}
+        y1={sdb.y - tick}
+        x2={sdb.x + tick}
+        y2={sdb.y + tick}
+        stroke={stroke}
+        strokeWidth={1}
+      />
+      <rect
+        x={mid.x - boxW / 2}
+        y={mid.y - 12 - labelDy}
+        width={boxW}
+        height={12}
+        fill="#ffffff"
+        opacity={0.95}
+      />
       <text x={mid.x} y={mid.y - 3 - labelDy} fontSize={10} fill="#1f2937" textAnchor="middle">
         {text}
       </text>
@@ -841,7 +1003,11 @@ function dimensionVertical(
   const masks = constraints?.collisionMasks ?? [];
 
   let chosenLane = lane;
-  let chosenBoxes: { textBox: BoundingMask; segBox: BoundingMask; leaderBox: BoundingMask | null } | null = null;
+  let chosenBoxes: {
+    textBox: BoundingMask;
+    segBox: BoundingMask;
+    leaderBox: BoundingMask | null;
+  } | null = null;
   for (let shift = 0; shift <= maxShift; shift += 1) {
     const testLane = lane + shift;
     const labelDx = testLane * 28 + (isMinor ? 20 : 0);
@@ -859,11 +1025,11 @@ function dimensionVertical(
     };
     const leaderBox = isMinor
       ? {
-        minX: Math.min(mid.x + 2 + labelDx, lineX),
-        maxX: Math.max(mid.x + 2 + labelDx, lineX),
-        minY: Math.min(mid.y - 4, mid.y),
-        maxY: Math.max(mid.y - 4, mid.y),
-      }
+          minX: Math.min(mid.x + 2 + labelDx, lineX),
+          maxX: Math.max(mid.x + 2 + labelDx, lineX),
+          minY: Math.min(mid.y - 4, mid.y),
+          maxY: Math.max(mid.y - 4, mid.y),
+        }
       : null;
     const union = mergeMasks([textBox, segBox, ...(leaderBox ? [leaderBox] : [])]);
     if (!union || !intersectsAny(union, masks)) {
@@ -879,12 +1045,53 @@ function dimensionVertical(
     <g key={key}>
       <line x1={sa.x} y1={sa.y} x2={sda.x} y2={sda.y} stroke={stroke} strokeWidth={0.8} />
       <line x1={sb.x} y1={sb.y} x2={sdb.x} y2={sdb.y} stroke={stroke} strokeWidth={0.8} />
-      <line x1={lineX} y1={sda.y} x2={lineX} y2={midY - gapHalf} stroke={stroke} strokeWidth={0.9} />
-      <line x1={lineX} y1={midY + gapHalf} x2={lineX} y2={sdb.y} stroke={stroke} strokeWidth={0.9} />
-      <line x1={sda.x - tick} y1={sda.y - tick} x2={sda.x + tick} y2={sda.y + tick} stroke={stroke} strokeWidth={1} />
-      <line x1={sdb.x - tick} y1={sdb.y - tick} x2={sdb.x + tick} y2={sdb.y + tick} stroke={stroke} strokeWidth={1} />
-      <rect x={mid.x + 2 + labelDx} y={mid.y - 10} width={boxW} height={12} fill="#ffffff" opacity={0.95} />
-      <text x={mid.x + 2 + labelDx + boxW / 2} y={mid.y - 1} fontSize={10} fill="#1f2937" textAnchor="middle">
+      <line
+        x1={lineX}
+        y1={sda.y}
+        x2={lineX}
+        y2={midY - gapHalf}
+        stroke={stroke}
+        strokeWidth={0.9}
+      />
+      <line
+        x1={lineX}
+        y1={midY + gapHalf}
+        x2={lineX}
+        y2={sdb.y}
+        stroke={stroke}
+        strokeWidth={0.9}
+      />
+      <line
+        x1={sda.x - tick}
+        y1={sda.y - tick}
+        x2={sda.x + tick}
+        y2={sda.y + tick}
+        stroke={stroke}
+        strokeWidth={1}
+      />
+      <line
+        x1={sdb.x - tick}
+        y1={sdb.y - tick}
+        x2={sdb.x + tick}
+        y2={sdb.y + tick}
+        stroke={stroke}
+        strokeWidth={1}
+      />
+      <rect
+        x={mid.x + 2 + labelDx}
+        y={mid.y - 10}
+        width={boxW}
+        height={12}
+        fill="#ffffff"
+        opacity={0.95}
+      />
+      <text
+        x={mid.x + 2 + labelDx + boxW / 2}
+        y={mid.y - 1}
+        fontSize={10}
+        fill="#1f2937"
+        textAnchor="middle"
+      >
         {text}
       </text>
       {isMinor && (
@@ -935,14 +1142,29 @@ function dimensionVertical(
 function Legend({ layers }: { layers: LayerState }) {
   return (
     <g>
-      <rect x={VIEW_W - 255} y={20} width={220} height={112} fill="rgba(255,255,255,0.93)" stroke="#cbd5e1" />
+      <rect
+        x={VIEW_W - 255}
+        y={20}
+        width={220}
+        height={112}
+        fill="rgba(255,255,255,0.93)"
+        stroke="#cbd5e1"
+      />
       <text x={VIEW_W - 245} y={40} fontSize={14} fill="#111827">
         Capas activas
       </text>
-      <text x={VIEW_W - 245} y={60} fontSize={13} fill="#111827">Arquitectura: {layers.architecture ? "ON" : "OFF"}</text>
-      <text x={VIEW_W - 245} y={78} fontSize={13} fill="#111827">Sanitaria: {layers.sanitary ? "ON" : "OFF"}</text>
-      <text x={VIEW_W - 245} y={96} fontSize={13} fill="#111827">Electrica: {layers.electrical ? "ON" : "OFF"}</text>
-      <text x={VIEW_W - 245} y={114} fontSize={13} fill="#111827">Cotas: {layers.dimensions ? "ON" : "OFF"}</text>
+      <text x={VIEW_W - 245} y={60} fontSize={13} fill="#111827">
+        Arquitectura: {layers.architecture ? "ON" : "OFF"}
+      </text>
+      <text x={VIEW_W - 245} y={78} fontSize={13} fill="#111827">
+        Sanitaria: {layers.sanitary ? "ON" : "OFF"}
+      </text>
+      <text x={VIEW_W - 245} y={96} fontSize={13} fill="#111827">
+        Electrica: {layers.electrical ? "ON" : "OFF"}
+      </text>
+      <text x={VIEW_W - 245} y={114} fontSize={13} fill="#111827">
+        Cotas: {layers.dimensions ? "ON" : "OFF"}
+      </text>
     </g>
   );
 }
@@ -959,8 +1181,18 @@ function DebugMasks({ masks, toSvg }: { masks: BoundingMask[]; toSvg: (p: Point2
         const h = Math.abs(p2.y - p1.y);
         return (
           <g key={`dbg-open-${i}`}>
-            <rect x={x} y={y} width={w} height={h} fill="rgba(239,68,68,0.18)" stroke="#dc2626" strokeWidth={0.8} />
-            <text x={x + 4} y={y + 11} fontSize={9} fill="#991b1b">opening-mask</text>
+            <rect
+              x={x}
+              y={y}
+              width={w}
+              height={h}
+              fill="rgba(239,68,68,0.18)"
+              stroke="#dc2626"
+              strokeWidth={0.8}
+            />
+            <text x={x + 4} y={y + 11} fontSize={9} fill="#991b1b">
+              opening-mask
+            </text>
           </g>
         );
       })}
@@ -979,8 +1211,8 @@ function estimateDimensionMargins(layout: LayoutV1 | null, dimensionsOn: boolean
   const minorY = gy.slice(0, -1).filter((y0, i) => Math.abs(gy[i + 1] - y0) < 0.2).length;
   return {
     left: 0.7,
-    right: 0.9 + Math.min(0.6, minorY * 0.10),
-    top: 0.9 + Math.min(0.6, minorX * 0.10),
+    right: 0.9 + Math.min(0.6, minorY * 0.1),
+    top: 0.9 + Math.min(0.6, minorX * 0.1),
     bottom: 0.7,
   };
 }
@@ -1157,7 +1389,12 @@ function selectLabelAnchor(vertices: Point2D[], walls: LayoutV1["muros_y_columna
 
   const inWalls = walls.filter((w) =>
     segmentBoxIntersectsPolygon(
-      { minX: Math.min(w.inicio.x, w.fin.x), maxX: Math.max(w.inicio.x, w.fin.x), minY: Math.min(w.inicio.y, w.fin.y), maxY: Math.max(w.inicio.y, w.fin.y) },
+      {
+        minX: Math.min(w.inicio.x, w.fin.x),
+        maxX: Math.max(w.inicio.x, w.fin.x),
+        minY: Math.min(w.inicio.y, w.fin.y),
+        maxY: Math.max(w.inicio.y, w.fin.y),
+      },
       vertices,
     ),
   );
@@ -1278,7 +1515,15 @@ function dimensionParallel(
         stroke="#64748b"
         strokeWidth={0.9}
       />
-      <rect x={sMid.x - 20} y={sMid.y - 11} width={40} height={12} fill="#ffffff" opacity={0.95} rx={1} />
+      <rect
+        x={sMid.x - 20}
+        y={sMid.y - 11}
+        width={40}
+        height={12}
+        fill="#ffffff"
+        opacity={0.95}
+        rx={1}
+      />
       <text x={sMid.x} y={sMid.y - 2} fontSize={10} fill="#1f2937" textAnchor="middle">
         {len.toFixed(2)} m
       </text>
@@ -1304,8 +1549,9 @@ function pointInPolygon(point: Point2D, polygon: Point2D[]) {
     const yi = polygon[i].y;
     const xj = polygon[j].x;
     const yj = polygon[j].y;
-    const intersect = yi > point.y !== yj > point.y
-      && point.x < ((xj - xi) * (point.y - yi)) / ((yj - yi) || 1e-9) + xi;
+    const intersect =
+      yi > point.y !== yj > point.y &&
+      point.x < ((xj - xi) * (point.y - yi)) / (yj - yi || 1e-9) + xi;
     if (intersect) inside = !inside;
   }
   return inside;
@@ -1383,17 +1629,64 @@ function openingDimension({
       <line x1={s0.x} y1={s0.y} x2={s.x} y2={s.y} stroke="#64748b" strokeWidth={0.7} />
       <line x1={e0.x} y1={e0.y} x2={e.x} y2={e.y} stroke="#64748b" strokeWidth={0.7} />
       <line x1={s.x} y1={s.y} x2={e.x} y2={e.y} stroke="#64748b" strokeWidth={0.8} />
-      <line x1={s.x - n.x * tick} y1={s.y - n.y * tick} x2={s.x + n.x * tick} y2={s.y + n.y * tick} stroke="#64748b" strokeWidth={0.8} />
-      <line x1={e.x - n.x * tick} y1={e.y - n.y * tick} x2={e.x + n.x * tick} y2={e.y + n.y * tick} stroke="#64748b" strokeWidth={0.8} />
-      <rect x={textBox.x} y={textBox.y} width={textBox.width} height={textBox.height} fill="#ffffff" stroke="#cbd5e1" strokeWidth={0.6} opacity={0.98} />
+      <line
+        x1={s.x - n.x * tick}
+        y1={s.y - n.y * tick}
+        x2={s.x + n.x * tick}
+        y2={s.y + n.y * tick}
+        stroke="#64748b"
+        strokeWidth={0.8}
+      />
+      <line
+        x1={e.x - n.x * tick}
+        y1={e.y - n.y * tick}
+        x2={e.x + n.x * tick}
+        y2={e.y + n.y * tick}
+        stroke="#64748b"
+        strokeWidth={0.8}
+      />
+      <rect
+        x={textBox.x}
+        y={textBox.y}
+        width={textBox.width}
+        height={textBox.height}
+        fill="#ffffff"
+        stroke="#cbd5e1"
+        strokeWidth={0.6}
+        opacity={0.98}
+      />
       <text x={lx} y={ly - 1.5} fontSize={9} fill="#1f2937" textAnchor="middle">
         {text}
       </text>
       {debugMode && (
         <>
-          <rect x={segBox.x} y={segBox.y} width={segBox.width} height={segBox.height} fill="rgba(59,130,246,0.18)" stroke="#2563eb" strokeWidth={0.7} />
-          <rect x={exclusion.x} y={exclusion.y} width={exclusion.width} height={exclusion.height} fill="rgba(217,70,239,0.12)" stroke="#d946ef" strokeWidth={0.7} />
-          <rect x={textBox.x} y={textBox.y} width={textBox.width} height={textBox.height} fill="rgba(249,115,22,0.2)" stroke="#f97316" strokeWidth={0.7} />
+          <rect
+            x={segBox.x}
+            y={segBox.y}
+            width={segBox.width}
+            height={segBox.height}
+            fill="rgba(59,130,246,0.18)"
+            stroke="#2563eb"
+            strokeWidth={0.7}
+          />
+          <rect
+            x={exclusion.x}
+            y={exclusion.y}
+            width={exclusion.width}
+            height={exclusion.height}
+            fill="rgba(217,70,239,0.12)"
+            stroke="#d946ef"
+            strokeWidth={0.7}
+          />
+          <rect
+            x={textBox.x}
+            y={textBox.y}
+            width={textBox.width}
+            height={textBox.height}
+            fill="rgba(249,115,22,0.2)"
+            stroke="#f97316"
+            strokeWidth={0.7}
+          />
         </>
       )}
     </g>
@@ -1516,7 +1809,18 @@ function roomNetDimensions({
         let selected: { xDim: number; yDim: number } | null = null;
         for (const c of candidates) {
           const center = { x: c.xDim, y: c.yDim };
-          if (intersectsAny({ minX: center.x - 0.01, maxX: center.x + 0.01, minY: center.y - 0.01, maxY: center.y + 0.01 }, collisionMasks)) continue;
+          if (
+            intersectsAny(
+              {
+                minX: center.x - 0.01,
+                maxX: center.x + 0.01,
+                minY: center.y - 0.01,
+                maxY: center.y + 0.01,
+              },
+              collisionMasks,
+            )
+          )
+            continue;
           const hA = { x: b.minX, y: c.yDim };
           const hB = { x: b.maxX, y: c.yDim };
           const vA = { x: c.xDim, y: b.minY };
@@ -1569,12 +1873,17 @@ function boundaryWallThickness(
   const candidates = walls.filter((wall) => {
     const p1 = wall.inicio;
     const p2 = wall.fin;
-    if (side === "left") return Math.abs(p1.x - bounds.minX) <= eps && Math.abs(p2.x - bounds.minX) <= eps;
-    if (side === "right") return Math.abs(p1.x - bounds.maxX) <= eps && Math.abs(p2.x - bounds.maxX) <= eps;
-    if (side === "bottom") return Math.abs(p1.y - bounds.minY) <= eps && Math.abs(p2.y - bounds.minY) <= eps;
+    if (side === "left")
+      return Math.abs(p1.x - bounds.minX) <= eps && Math.abs(p2.x - bounds.minX) <= eps;
+    if (side === "right")
+      return Math.abs(p1.x - bounds.maxX) <= eps && Math.abs(p2.x - bounds.maxX) <= eps;
+    if (side === "bottom")
+      return Math.abs(p1.y - bounds.minY) <= eps && Math.abs(p2.y - bounds.minY) <= eps;
     return Math.abs(p1.y - bounds.maxY) <= eps && Math.abs(p2.y - bounds.maxY) <= eps;
   });
-  return candidates.length ? Math.max(...candidates.map((w) => Math.max(0.05, w.espesor_m || 0.15))) : 0.15;
+  return candidates.length
+    ? Math.max(...candidates.map((w) => Math.max(0.05, w.espesor_m || 0.15)))
+    : 0.15;
 }
 
 function isPerimeterWall(
@@ -1612,7 +1921,9 @@ function buildGrossRefsX(
     // Interior wall: add BOTH faces as gross refs
     refs.push(faceL, faceR);
   }
-  const rawRefs = uniqueSorted(refs, 0.005).filter((v) => v >= bounds.minX - 1e-6 && v <= bounds.maxX + 1e-6);
+  const rawRefs = uniqueSorted(refs, 0.005).filter(
+    (v) => v >= bounds.minX - 1e-6 && v <= bounds.maxX + 1e-6,
+  );
   // FIX-V1: Merge any consecutive refs closer than 0.12m (sub-wall-thickness)
   return mergeCloseRefs(rawRefs, 0.12);
 }
@@ -1642,7 +1953,8 @@ function buildGrossRefsY(
   const refs = [bounds.minY, bounds.maxY];
   const eps = 0.04;
   for (const wall of walls) {
-    const isHorizontal = Math.abs(wall.fin.x - wall.inicio.x) > Math.abs(wall.fin.y - wall.inicio.y);
+    const isHorizontal =
+      Math.abs(wall.fin.x - wall.inicio.x) > Math.abs(wall.fin.y - wall.inicio.y);
     if (!isHorizontal) continue;
     const c = (wall.inicio.y + wall.fin.y) / 2;
     const halfE = wall.espesor_m / 2;
@@ -1654,7 +1966,9 @@ function buildGrossRefsY(
     if (isPerimBot || isPerimTop) continue;
     refs.push(faceBot, faceTop);
   }
-  const rawRefs = uniqueSorted(refs, 0.005).filter((v) => v >= bounds.minY - 1e-6 && v <= bounds.maxY + 1e-6);
+  const rawRefs = uniqueSorted(refs, 0.005).filter(
+    (v) => v >= bounds.minY - 1e-6 && v <= bounds.maxY + 1e-6,
+  );
   // FIX-V1: Merge any consecutive refs closer than 0.12m
   return mergeCloseRefs(rawRefs, 0.12);
 }
@@ -1733,7 +2047,9 @@ function buildRoomLabelMasks(
 }
 
 function intersectsAny(mask: BoundingMask, masks: BoundingMask[]) {
-  return masks.some((m) => !(mask.maxX < m.minX || mask.minX > m.maxX || mask.maxY < m.minY || mask.minY > m.maxY));
+  return masks.some(
+    (m) => !(mask.maxX < m.minX || mask.minX > m.maxX || mask.maxY < m.minY || mask.minY > m.maxY),
+  );
 }
 
 function mergeMasks(masks: BoundingMask[]) {
@@ -1796,7 +2112,10 @@ function expandMask(mask: BoundingMask, amount: number): BoundingMask {
 function segmentIntersectsMasks(a: Point2D, b: Point2D, masks: BoundingMask[], padding = 0) {
   const seg = boundsOfPoints([a, b]);
   const probe = expandMask(seg, padding);
-  return masks.some((m) => !(probe.maxX < m.minX || probe.minX > m.maxX || probe.maxY < m.minY || probe.minY > m.maxY));
+  return masks.some(
+    (m) =>
+      !(probe.maxX < m.minX || probe.minX > m.maxX || probe.maxY < m.minY || probe.minY > m.maxY),
+  );
 }
 
 type DimAxis = "h" | "v";
@@ -1848,7 +2167,15 @@ function buildDimCandidates({
   grossRefsX: number[];
   grossRefsY: number[];
   netRefs: { refsX: number[]; refsY: number[]; yDim: number; xDim: number };
-  roomAnchors: Array<{ roomId: string; minX: number; maxX: number; minY: number; maxY: number; xDim: number; yDim: number }>;
+  roomAnchors: Array<{
+    roomId: string;
+    minX: number;
+    maxX: number;
+    minY: number;
+    maxY: number;
+    xDim: number;
+    yDim: number;
+  }>;
   doors: LayoutV1["puertas_ventanas"]["puertas"];
   windows: LayoutV1["puertas_ventanas"]["ventanas"];
   wallById: Map<string, WallLike>;
@@ -2001,45 +2328,54 @@ function buildDimCandidates({
     // Room dims: priority 80 for X, 78 for Y — X is placed first to avoid collisions
     if (w >= 0.25) {
       const yAnchors = [room.yDim, room.minY + h * 0.66, room.minY + h * 0.33];
-      yAnchors.forEach((ay, idx) => cands.push({
-        id: `room-x-${room.roomId}-${idx}`,
-        groupId: `room-x-${room.roomId}`,
-        axis: "h",
-        wStart: { x: room.minX, y: ay },
-        wEnd: { x: room.maxX, y: ay },
-        wExtStart: { x: room.minX, y: ay + 0.06 },
-        wExtEnd: { x: room.maxX, y: ay + 0.06 },
-        text: `${w.toFixed(2)} m`,
-        priority: 80,
-        baseLane: idx,
-        minor: false,
-      }));
+      yAnchors.forEach((ay, idx) =>
+        cands.push({
+          id: `room-x-${room.roomId}-${idx}`,
+          groupId: `room-x-${room.roomId}`,
+          axis: "h",
+          wStart: { x: room.minX, y: ay },
+          wEnd: { x: room.maxX, y: ay },
+          wExtStart: { x: room.minX, y: ay + 0.06 },
+          wExtEnd: { x: room.maxX, y: ay + 0.06 },
+          text: `${w.toFixed(2)} m`,
+          priority: 80,
+          baseLane: idx,
+          minor: false,
+        }),
+      );
     }
     if (h >= 0.25) {
       const xAnchors = [room.xDim, room.minX + w * 0.66, room.minX + w * 0.33];
-      xAnchors.forEach((ax, idx) => cands.push({
-        id: `room-y-${room.roomId}-${idx}`,
-        groupId: `room-y-${room.roomId}`,
-        axis: "v",
-        wStart: { x: ax, y: room.minY },
-        wEnd: { x: ax, y: room.maxY },
-        wExtStart: { x: ax + 0.06, y: room.minY },
-        wExtEnd: { x: ax + 0.06, y: room.maxY },
-        text: `${h.toFixed(2)} m`,
-        priority: 78,
-        baseLane: idx,
-        minor: false,
-      }));
+      xAnchors.forEach((ax, idx) =>
+        cands.push({
+          id: `room-y-${room.roomId}-${idx}`,
+          groupId: `room-y-${room.roomId}`,
+          axis: "v",
+          wStart: { x: ax, y: room.minY },
+          wEnd: { x: ax, y: room.maxY },
+          wExtStart: { x: ax + 0.06, y: room.minY },
+          wExtEnd: { x: ax + 0.06, y: room.maxY },
+          text: `${h.toFixed(2)} m`,
+          priority: 78,
+          baseLane: idx,
+          minor: false,
+        }),
+      );
     }
   }
   return cands;
 }
 
-function buildRoomAnchorCandidates(
-  rooms: LayoutV1["ambientes"],
-  hardMasks: BoundingMask[],
-) {
-  const anchors: Array<{ roomId: string; minX: number; maxX: number; minY: number; maxY: number; xDim: number; yDim: number }> = [];
+function buildRoomAnchorCandidates(rooms: LayoutV1["ambientes"], hardMasks: BoundingMask[]) {
+  const anchors: Array<{
+    roomId: string;
+    minX: number;
+    maxX: number;
+    minY: number;
+    maxY: number;
+    xDim: number;
+    yDim: number;
+  }> = [];
   for (const room of rooms) {
     const b = boundsOfPolygon(room.vertices);
     const width = b.maxX - b.minX;
@@ -2067,12 +2403,28 @@ function buildRoomAnchorCandidates(
       const yDim = b.minY + height * c.y;
       const center = { x: xDim, y: yDim };
       if (!pointInPolygon(center, room.vertices)) continue;
-      const probe: BoundingMask = { minX: xDim - 0.06, maxX: xDim + 0.06, minY: yDim - 0.06, maxY: yDim + 0.06 };
+      const probe: BoundingMask = {
+        minX: xDim - 0.06,
+        maxX: xDim + 0.06,
+        minY: yDim - 0.06,
+        maxY: yDim + 0.06,
+      };
       const overlapHard = hardMasks.some((m) => intersectsAny(probe, [m])) ? 1 : 0;
       const overlapLabel = intersectsAny(probe, [roomLabel]) ? 1 : 0;
-      const hLine: BoundingMask = { minX: b.minX, maxX: b.maxX, minY: yDim - 0.04, maxY: yDim + 0.04 };
-      const vLine: BoundingMask = { minX: xDim - 0.04, maxX: xDim + 0.04, minY: b.minY, maxY: b.maxY };
-      const linePenalty = (intersectsAny(hLine, hardMasks) ? 1 : 0) + (intersectsAny(vLine, hardMasks) ? 1 : 0);
+      const hLine: BoundingMask = {
+        minX: b.minX,
+        maxX: b.maxX,
+        minY: yDim - 0.04,
+        maxY: yDim + 0.04,
+      };
+      const vLine: BoundingMask = {
+        minX: xDim - 0.04,
+        maxX: xDim + 0.04,
+        minY: b.minY,
+        maxY: b.maxY,
+      };
+      const linePenalty =
+        (intersectsAny(hLine, hardMasks) ? 1 : 0) + (intersectsAny(vLine, hardMasks) ? 1 : 0);
       const dx = c.x - 0.5;
       const dy = c.y - 0.5;
       const dist = Math.hypot(dx, dy) * 0.4;
@@ -2196,7 +2548,11 @@ function projectCandidate(c: DimCandidate, laneShift: number, scale: number): Di
     const leaderMask = leader
       ? expandMask(boundsOfPoints([leader.from, leader.via ?? leader.from, leader.to]), pxToM(1))
       : null;
-    const union = mergeMasks([expandMask(textBox, pxToM(2)), expandMask(segmentBox, pxToM(1)), ...(leaderMask ? [leaderMask] : [])]);
+    const union = mergeMasks([
+      expandMask(textBox, pxToM(2)),
+      expandMask(segmentBox, pxToM(1)),
+      ...(leaderMask ? [leaderMask] : []),
+    ]);
     if (!union) return null;
     return {
       id: c.id,
@@ -2247,7 +2603,11 @@ function projectCandidate(c: DimCandidate, laneShift: number, scale: number): Di
   const leaderMask = leader
     ? expandMask(boundsOfPoints([leader.from, leader.via ?? leader.from, leader.to]), pxToM(1))
     : null;
-  const union = mergeMasks([expandMask(textBox, pxToM(2)), expandMask(segmentBox, pxToM(1)), ...(leaderMask ? [leaderMask] : [])]);
+  const union = mergeMasks([
+    expandMask(textBox, pxToM(2)),
+    expandMask(segmentBox, pxToM(1)),
+    ...(leaderMask ? [leaderMask] : []),
+  ]);
   if (!union) return null;
   return {
     id: c.id,
@@ -2322,31 +2682,76 @@ function renderPlacement(p: DimPlacement, toSvg: (p: Point2D) => Point2D, debugM
   // Only suppress for room dims — gross/overall and door openings always show
   const isGrossOrOverall = p.id.startsWith("gross-") || p.id.startsWith("overall-");
   const isOpening = p.id.startsWith("open-");
-  const segLenPx = p.axis === "h"
-    ? Math.abs(bSeg.x - aSeg.x)
-    : Math.abs(bSeg.y - aSeg.y);
+  const segLenPx = p.axis === "h" ? Math.abs(bSeg.x - aSeg.x) : Math.abs(bSeg.y - aSeg.y);
   const textWidthPx = Math.max(1, br.x - tl.x);
   const suppressCentralLine = !isGrossOrOverall && !isOpening && segLenPx < textWidthPx + 8;
 
   return (
     <g key={p.id}>
-      <line x1={clampedAExt.x} y1={clampedAExt.y} x2={aSeg.x} y2={aSeg.y} stroke={p.stroke} strokeWidth={sw} />
-      <line x1={clampedBExt.x} y1={clampedBExt.y} x2={bSeg.x} y2={bSeg.y} stroke={p.stroke} strokeWidth={sw} />
+      <line
+        x1={clampedAExt.x}
+        y1={clampedAExt.y}
+        x2={aSeg.x}
+        y2={aSeg.y}
+        stroke={p.stroke}
+        strokeWidth={sw}
+      />
+      <line
+        x1={clampedBExt.x}
+        y1={clampedBExt.y}
+        x2={bSeg.x}
+        y2={bSeg.y}
+        stroke={p.stroke}
+        strokeWidth={sw}
+      />
       {/* Central dimension line — suppressed if segment is narrower than text */}
-      {!suppressCentralLine && (() => {
-        const textGapPx = Math.max(1, br.x - tl.x) / 2 + 4;
-        if (p.axis === "h") {
-          return (<>
-            <line x1={aSeg.x} y1={aSeg.y} x2={textPos.x - textGapPx} y2={aSeg.y} stroke={p.stroke} strokeWidth={sw + 0.1} />
-            <line x1={textPos.x + textGapPx} y1={bSeg.y} x2={bSeg.x} y2={bSeg.y} stroke={p.stroke} strokeWidth={sw + 0.1} />
-          </>);
-        }
-        const textGapPxV = Math.max(1, tl.y - br.y) / 2 + 4;
-        return (<>
-          <line x1={aSeg.x} y1={aSeg.y} x2={aSeg.x} y2={textPos.y - textGapPxV} stroke={p.stroke} strokeWidth={sw + 0.1} />
-          <line x1={bSeg.x} y1={textPos.y + textGapPxV} x2={bSeg.x} y2={bSeg.y} stroke={p.stroke} strokeWidth={sw + 0.1} />
-        </>);
-      })()}
+      {!suppressCentralLine &&
+        (() => {
+          const textGapPx = Math.max(1, br.x - tl.x) / 2 + 4;
+          if (p.axis === "h") {
+            return (
+              <>
+                <line
+                  x1={aSeg.x}
+                  y1={aSeg.y}
+                  x2={textPos.x - textGapPx}
+                  y2={aSeg.y}
+                  stroke={p.stroke}
+                  strokeWidth={sw + 0.1}
+                />
+                <line
+                  x1={textPos.x + textGapPx}
+                  y1={bSeg.y}
+                  x2={bSeg.x}
+                  y2={bSeg.y}
+                  stroke={p.stroke}
+                  strokeWidth={sw + 0.1}
+                />
+              </>
+            );
+          }
+          const textGapPxV = Math.max(1, tl.y - br.y) / 2 + 4;
+          return (
+            <>
+              <line
+                x1={aSeg.x}
+                y1={aSeg.y}
+                x2={aSeg.x}
+                y2={textPos.y - textGapPxV}
+                stroke={p.stroke}
+                strokeWidth={sw + 0.1}
+              />
+              <line
+                x1={bSeg.x}
+                y1={textPos.y + textGapPxV}
+                x2={bSeg.x}
+                y2={bSeg.y}
+                stroke={p.stroke}
+                strokeWidth={sw + 0.1}
+              />
+            </>
+          );
+        })()}
       <line x1={tA1.x} y1={tA1.y} x2={tA2.x} y2={tA2.y} stroke={p.stroke} strokeWidth={1} />
       <line x1={tB1.x} y1={tB1.y} x2={tB2.x} y2={tB2.y} stroke={p.stroke} strokeWidth={1} />
       {/* FIX-V2: White background rect behind dimension text */}

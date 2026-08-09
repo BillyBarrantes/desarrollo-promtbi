@@ -20,7 +20,9 @@ export function VersionHistory({ versions, selectedId, onSelect }: Props) {
     return (
       <section>
         <h3>Historial de Versiones</h3>
-        <p className="empty-state">Aun no hay versiones generadas. Genera una propuesta para comenzar.</p>
+        <p className="empty-state">
+          Aun no hay versiones generadas. Genera una propuesta para comenzar.
+        </p>
       </section>
     );
   }
@@ -32,7 +34,10 @@ export function VersionHistory({ versions, selectedId, onSelect }: Props) {
         {versions.map((version) => {
           const active = selectedId === version.id;
           return (
-            <li key={version.id} className={active ? "history-item history-item--active" : "history-item"}>
+            <li
+              key={version.id}
+              className={active ? "history-item history-item--active" : "history-item"}
+            >
               <button
                 type="button"
                 className="history-item__btn"

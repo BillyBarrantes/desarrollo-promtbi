@@ -6,23 +6,23 @@ type BlockType = LayoutV1["mobiliario"][number]["block_type"];
 
 /** Real-world dimensions (meters) for each furniture block. */
 export const BLOCK_DIMENSIONS: Record<BlockType, { w: number; h: number }> = {
-  cama: { w: 1.40, h: 2.00 },
-  inodoro: { w: 0.40, h: 0.65 },
+  cama: { w: 1.4, h: 2.0 },
+  inodoro: { w: 0.4, h: 0.65 },
   lavabo: { w: 0.55, h: 0.45 },
-  mesa: { w: 1.20, h: 0.80 },
-  auto: { w: 2.40, h: 5.00 },
-  sofa: { w: 2.10, h: 0.90 },
-  cocina: { w: 2.40, h: 0.60 },
-  ducha: { w: 0.90, h: 0.90 },
-  otro: { w: 0.60, h: 0.60 },
+  mesa: { w: 1.2, h: 0.8 },
+  auto: { w: 2.4, h: 5.0 },
+  sofa: { w: 2.1, h: 0.9 },
+  cocina: { w: 2.4, h: 0.6 },
+  ducha: { w: 0.9, h: 0.9 },
+  otro: { w: 0.6, h: 0.6 },
 };
 
 interface BlockProps {
   type: BlockType;
-  insertion: Point2D;  // Already in SVG px coordinates
+  insertion: Point2D; // Already in SVG px coordinates
   rotationDeg: number;
-  scale: number;       // User-defined scale multiplier (from layout JSON)
-  pxPerMeter: number;  // Conversion factor from meters to SVG px
+  scale: number; // User-defined scale multiplier (from layout JSON)
+  pxPerMeter: number; // Conversion factor from meters to SVG px
 }
 
 export function CADBlock({ type, insertion, rotationDeg, scale, pxPerMeter }: BlockProps) {
@@ -33,9 +33,7 @@ export function CADBlock({ type, insertion, rotationDeg, scale, pxPerMeter }: Bl
 
   return (
     <g transform={`translate(${insertion.x} ${insertion.y}) rotate(${rotationDeg})`}>
-      <g transform={`scale(${wPx} ${hPx})`}>
-        {renderBlock(type)}
-      </g>
+      <g transform={`scale(${wPx} ${hPx})`}>{renderBlock(type)}</g>
     </g>
   );
 }
@@ -54,8 +52,24 @@ function renderBlock(type: BlockType) {
           {/* Mattress outline */}
           <rect x={-0.5} y={-0.5} width={1} height={1} rx={0.03} />
           {/* Pillows */}
-          <rect x={-0.42} y={-0.44} width={0.35} height={0.16} rx={0.04} fill="#cbd5e1" fillOpacity={0.6} />
-          <rect x={0.07} y={-0.44} width={0.35} height={0.16} rx={0.04} fill="#cbd5e1" fillOpacity={0.6} />
+          <rect
+            x={-0.42}
+            y={-0.44}
+            width={0.35}
+            height={0.16}
+            rx={0.04}
+            fill="#cbd5e1"
+            fillOpacity={0.6}
+          />
+          <rect
+            x={0.07}
+            y={-0.44}
+            width={0.35}
+            height={0.16}
+            rx={0.04}
+            fill="#cbd5e1"
+            fillOpacity={0.6}
+          />
           {/* Blanket line */}
           <line x1={-0.45} y1={-0.1} x2={0.45} y2={-0.1} strokeDasharray="0.04 0.02" />
         </g>
@@ -107,7 +121,15 @@ function renderBlock(type: BlockType) {
           {/* Back */}
           <rect x={-0.5} y={-0.5} width={1} height={0.25} rx={0.04} />
           {/* Seat */}
-          <rect x={-0.5} y={-0.25} width={1} height={0.75} rx={0.04} fill="#ede9fe" fillOpacity={0.3} />
+          <rect
+            x={-0.5}
+            y={-0.25}
+            width={1}
+            height={0.75}
+            rx={0.04}
+            fill="#ede9fe"
+            fillOpacity={0.3}
+          />
           {/* Armrests */}
           <rect x={-0.5} y={-0.25} width={0.1} height={0.75} rx={0.03} />
           <rect x={0.4} y={-0.25} width={0.1} height={0.75} rx={0.03} />
