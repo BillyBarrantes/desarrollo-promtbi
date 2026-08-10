@@ -1,0 +1,97 @@
+{
+  "schema_version": 2,
+  "task_id": "task-0006",
+  "project_id": "desarrollo-promtbi-main",
+  "workspace_root": "/srv/agentic/projects/desarrollo-promtbi-main",
+  "requested_by": "telegram:1450989719",
+  "title": "Fase 8.5 - Gates de PR y release controlado",
+  "goal": "Implementar validaciones deterministas para contrato, seguridad, QA, PR, release, staging, healthcheck y rollback sin habilitar producción automáticamente.",
+  "status": "awaiting_approval",
+  "current_agent": "qa-reviewer",
+  "risk_level": "medium",
+  "scope": {
+    "allowed_paths": [
+      "scripts/",
+      "reports/",
+      ".opencode/commands/",
+      ".ops/state/",
+      ".ops/logs/",
+      "RUNBOOK.md",
+      "AGENT_POLICY.md"
+    ],
+    "forbidden_paths": [
+      ".git/",
+      ".env",
+      "secrets/",
+      "infra/production/",
+      "backend/",
+      "frontend/",
+      "node_modules/",
+      "dist/",
+      "coverage/",
+      "playwright-report/",
+      "test-results/"
+    ]
+  },
+  "acceptance_criteria": [
+    "review-contract.sh valida el contrato completo de una tarea y devuelve JSON limpio.",
+    "review-security.sh detecta rutas fuera de alcance, secretos y cambios prohibidos.",
+    "run-qa.sh ejecuta los checks reales definidos por el proyecto.",
+    "open-pr.sh bloquea la apertura si QA o las revisiones requeridas no están aprobadas.",
+    "run-release.sh bloquea el release si no existe aprobación humana explícita.",
+    "deploy.sh solo permite desplegar a staging cuando la tarea está en estado released.",
+    "Cada despliegue registra el commit desplegado mediante deployed_sha.",
+    "healthcheck.sh o el mecanismo equivalente verifica realmente el servicio desplegado.",
+    "rollback.sh permite recuperar el último despliegue válido sin tocar producción.",
+    "Producción permanece bloqueada y requiere una aprobación humana independiente."
+  ],
+  "required_checks": [
+    "bash -n scripts/*.sh",
+    "bash scripts/review-contract.sh desarrollo-promtbi-main task-0006",
+    "git diff --check",
+    "git diff --name-only",
+    "Frontend lint, typecheck, format check, unit y E2E.",
+    "Backend pytest.",
+    "Validación de que no se modifican backend, frontend ni infra/production durante los gates.",
+    "Prueba negativa de bloqueo sin aprobación humana."
+  ],
+  "approval_required": true,
+  "retries": 0,
+  "last_error": null,
+  "modified_files": [
+    ".ops/state/task-0006.json",
+    "reports/plans/task-0006-plan.md",
+    "reports/qa/task-0006-qa.md",
+    "scripts/deploy.sh",
+    "scripts/healthcheck.sh",
+    "scripts/open-pr.sh",
+    "scripts/review-contract.sh",
+    "scripts/review-security.sh",
+    "scripts/rollback.sh",
+    "scripts/run-qa.sh",
+    "scripts/run-release.sh"
+  ],
+  "artifacts": [
+    ".ops/logs/task-0006-backend-healthcheck.log",
+    ".ops/logs/task-0006-qa.log",
+    "reports/plans/task-0006-plan.md",
+    "reports/qa/task-0006-qa.md"
+  ],
+  "created_at": "2026-08-10T18:38:37Z",
+  "updated_at": "2026-08-10T19:18:11Z",
+  "checks": {
+    "frontend_lint": "passed",
+    "frontend_typecheck": "passed",
+    "frontend_format_check": "passed",
+    "frontend_unit": "passed",
+    "frontend_e2e": "passed",
+    "backend_pytest": "passed"
+  },
+  "healthcheck": {
+    "status": "passed",
+    "endpoint": "http://127.0.0.1:8003/api/v1/health",
+    "http_status": 200,
+    "healthy": true,
+    "temporary_backend": true
+  }
+}
