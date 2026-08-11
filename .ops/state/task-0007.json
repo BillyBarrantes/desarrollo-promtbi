@@ -1,0 +1,31 @@
+{
+  "schema_version": 2,
+  "task_id": "task-0007",
+  "project_id": "desarrollo-promtbi-main",
+  "workspace_root": "/srv/agentic/projects/desarrollo-promtbi-main",
+  "requested_by": "telegram:1450989719",
+  "title": "Implementar y validar gates de release de Fase 8.5",
+  "goal": "Implementar gates deterministas de contrato, seguridad, QA, release, staging, healthcheck y rollback, manteniendo producción bloqueada.",
+  "status": "qa",
+  "current_agent": "qa-reviewer",
+  "risk_level": "medium",
+  "approval_required": true,
+  "retries": 0,
+  "last_error": null,
+  "modified_files": [],
+  "acceptance_criteria": [
+    "Los scripts devuelven JSON determinista.",
+    "Release, staging y rollback requieren aprobación válida.",
+    "Producción permanece bloqueada.",
+    "Healthcheck y rollback tienen pruebas negativas.",
+    "No se modifican backend, frontend ni infra/production."
+  ],
+  "required_checks": [
+    "bash -n scripts/*.sh",
+    "bash scripts/review-contract.sh desarrollo-promtbi-main task-0007",
+    "bash scripts/review-security.sh desarrollo-promtbi-main task-0007",
+    "git diff --check",
+    "Pruebas negativas de aprobación, producción, healthcheck y rollback"
+  ],
+  "updated_at": "2026-08-10T00:00:00Z"
+}
