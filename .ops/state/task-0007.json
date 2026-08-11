@@ -6,8 +6,8 @@
   "requested_by": "telegram:1450989719",
   "title": "Implementar y validar gates de release de Fase 8.5",
   "goal": "Implementar gates deterministas de contrato, seguridad, QA, release, staging, healthcheck y rollback, manteniendo producción bloqueada.",
-  "status": "qa",
-  "current_agent": "qa-reviewer",
+  "status": "done",
+  "current_agent": "release-supervisor",
   "risk_level": "medium",
   "approval_required": true,
   "retries": 0,
@@ -27,5 +27,5 @@
     "git diff --check",
     "Pruebas negativas de aprobación, producción, healthcheck y rollback"
   ],
-  "updated_at": "2026-08-10T00:00:00Z"
+  "updated_at": "2026-08-10T00:20:00Z"
 }
