@@ -1,7 +1,7 @@
 {
   "task_id": "task-0019",
   "project_id": "desarrollo-promtbi-main",
-  "status": "approved",
+  "status": "closed",
   "branch": "agent/task-0019",
   "pr_number": 24,
   "pr_base": "main",
@@ -18,7 +18,8 @@
   "phase_status": "in_progress",
   "saas_target": "promdata",
   "created_at": "2026-08-14T00:00:00Z",
-  "updated_at": "2026-08-14T20:05:13Z",
+  "updated_at": "2026-08-14T20:21:54Z",
   "approved_by": "1450989719",
-  "approved_at": "2026-08-14T20:05:11Z"
+  "approved_at": "2026-08-14T20:05:11Z",
+  "close_reason": "Onboarding de promdata completado: registro, stack, Playwright, baseline, skills, primera tarea y habilitacion operativa; produccion bloqueada."
 }
