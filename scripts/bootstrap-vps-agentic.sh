@@ -42,9 +42,9 @@ env_vars=(
 packages=(
   "git"
   "node"
-  "npm"
-  "python"
-  "pip"
+  ""
+  "python3"
+  "python3-pip"
   "jq"
   "curl"
 )

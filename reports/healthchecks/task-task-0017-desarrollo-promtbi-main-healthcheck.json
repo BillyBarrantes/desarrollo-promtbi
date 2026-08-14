@@ -1,0 +1,1 @@
+{"task_id":"task-0017","project_id":"desarrollo-promtbi-main","checked_at":"2026-08-14T19:43:14Z","healthchecks":["ssh=true","http=true","db=false","agents=true","services=true","telegram=false","github=true"]}
