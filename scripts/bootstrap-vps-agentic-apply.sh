@@ -15,7 +15,7 @@ fail() {
 }
 
 log() {
-  mkdir -p "${LOG_DIR}" 2>/dev/null || true
+  mkdir -p -p "${LOG_DIR}" 2>/dev/null || true
   printf '[%s] %s project=%s task=%s\n' \
     "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$1" "$project_id" "$task_id" \
     >> "$log_file" 2>/dev/null || true
@@ -59,7 +59,7 @@ env_vars=(
   "BACKUP_DIR=${BACKUP_DIR}"
 )
 
-packages=(git node npm python pip jq curl)
+packages=(git node  python3 python3-pip jq curl)
 users=(promtbi-bot promtbi-agent)
 groups=(promtbi-bot promtbi-agent promtbi-users)
 dirs=( "$OPENCODE_HOME" "$WORKSPACE_ROOT" "$PROJECTS_ROOT" "$BOT_DIR" "$SECRETS_DIR" "$CONFIG_DIR" "$BACKUP_DIR" )
@@ -67,7 +67,7 @@ dirs=( "$OPENCODE_HOME" "$WORKSPACE_ROOT" "$PROJECTS_ROOT" "$BOT_DIR" "$SECRETS_
 # dependencias base
 apt-get update -y
 apt-get install -y --no-install-recommends \
-  git nodejs npm python3 python3-pip jq curl
+  git nodejs  python3 python3-python3-pip jq curl
 
 env_vars_installed=()
 packages_installed=()
@@ -86,7 +86,7 @@ done
 # usuarios + grupos primarios
 for u in "${users[@]}"; do
   if ! id -u "$u" >/dev/null 2>&1; then
-    useradd --shell /bin/bash --home-dir "/home/$u" --create-home "$u"
+    useradd -m -s /bin/bash --shell /bin/bash --home-dir "/home/$u" --create-home "$u"
   fi
   usermod -a -G promtbi-users "$u"
   usermod -a -G "$u" "$u"
