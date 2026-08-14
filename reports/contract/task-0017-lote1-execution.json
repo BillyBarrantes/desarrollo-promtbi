@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "mode": "lote1_execution",
+  "task_id": "task-0017",
+  "project_id": "desarrollo-promtbi-main",
+  "bootstrap": {
+    "status": "passed",
+    "mode": "bootstrap_apply",
+    "note": "applied_with_fallback",
+    "production_blocked": true
+  },
+  "restore_projects": {
+    "status": "failed",
+    "mode": "restore_projects_apply",
+    "reason": "failed to clone tres-niveles-web",
+    "production_blocked": true
+  },
+  "restore_secrets": {
+    "status": "passed",
+    "mode": "restore_secrets_apply",
+    "task_id": "task-0017",
+    "project_id": "desarrollo-promtbi-main",
+    "secrets_restored": [
+      "desarrollo-promtbi-main",
+      "promdata",
+      "tres-niveles-web"
+    ],
+    "destination": "${SECRETS_DIR}",
+    "permissions_set": "700",
+    "note": "secrets sourced from secure vault; values never printed",
+    "production_blocked": true
+  },
+  "production_blocked": true
+}

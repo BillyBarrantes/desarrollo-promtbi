@@ -1,7 +1,7 @@
 {
   "task_id": "task-0017",
   "project_id": "desarrollo-promtbi-main",
-  "status": "approved",
+  "status": "closed",
   "branch": "agent/task-0017",
   "pr_number": 21,
   "pr_base": "main",
@@ -17,7 +17,8 @@
   "phase": "10.5",
   "phase_status": "in_progress",
   "created_at": "2026-08-14T00:00:00Z",
-  "updated_at": "2026-08-14T19:23:28Z",
+  "updated_at": "2026-08-14T19:48:40Z",
   "approved_by": "1450989719",
-  "approved_at": "2026-08-14T19:23:26Z"
+  "approved_at": "2026-08-14T19:23:26Z",
+  "close_reason": "Lote 1 Fase 10.5 ejecutado: bootstrap, restore de proyectos/secretos/servicios/.ops/, healthcheck de plataforma y backup aplicados; produccion bloqueada."
 }

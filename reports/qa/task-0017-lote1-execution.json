@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "mode": "lote1_execution",
+  "task_id": "task-0017",
+  "project_id": "desarrollo-promtbi-main",
+  "healthcheck": {
+    "status": "passed",
+    "mode": "healthcheck_apply",
+    "task_id": "task-0017",
+    "project_id": "desarrollo-promtbi-main",
+    "healthchecks_run": [
+      "ssh",
+      "http",
+      "db",
+      "agents",
+      "services",
+      "telegram",
+      "github"
+    ],
+    "note": "results saved under reports/healthchecks/",
+    "production_blocked": true
+  },
+  "backup": {
+    "status": "passed",
+    "mode": "backup_apply",
+    "task_id": "task-0017",
+    "project_id": "desarrollo-promtbi-main",
+    "backup_sources": [
+      "proyectos",
+      "secretos",
+      "servicios",
+      ".ops_o_db",
+      "configs"
+    ],
+    "destination": "${BACKUP_DIR}",
+    "backup_archive": "/srv/agentic/backups/platform-backup-20260814T194314Z.tar.gz",
+    "note": "platform backup created; retention 30 days",
+    "production_blocked": true
+  },
+  "production_blocked": true
+}

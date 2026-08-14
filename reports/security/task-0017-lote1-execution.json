@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "mode": "lote1_execution",
+  "task_id": "task-0017",
+  "project_id": "desarrollo-promtbi-main",
+  "restore_services": {
+    "status": "passed",
+    "mode": "restore_services_apply",
+    "task_id": "task-0017",
+    "project_id": "desarrollo-promtbi-main",
+    "services_restored": [
+      "promtbi-agent.service",
+      "promtbi-backup.timer",
+      "promtbi-monitoring.timer"
+    ],
+    "note": "systemd units created/activated; nothing restarted",
+    "production_blocked": true
+  },
+  "restore_database": {
+    "status": "passed",
+    "mode": "restore_database_apply",
+    "task_id": "task-0017",
+    "project_id": "desarrollo-promtbi-main",
+    "restore_target": ".ops_or_database",
+    "note": ".ops restored from latest backup if present; DB import pending",
+    "production_blocked": true
+  },
+  "production_blocked": true
+}
