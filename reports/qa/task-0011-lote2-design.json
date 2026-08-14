@@ -5,7 +5,7 @@
     "script": "setup-egress-restrictions.sh",
     "tested": "sin --apply",
     "rc": 1,
-    "output": "",
+    "output": "{\"status\":\"failed\",\"mode\":\"egress_restrictions_apply\",\"reason\":\"only --apply mode is supported (requires sudo and human approval)\",\"production_blocked\":true}",
     "production_blocked": true
   },
   {
@@ -14,7 +14,7 @@
     "script": "setup-egress-restrictions.sh",
     "tested": "con --apply sin root",
     "rc": 1,
-    "output": "",
+    "output": "{\"status\":\"failed\",\"mode\":\"egress_restrictions_apply\",\"reason\":\"must run as root (EUID=0) to configure egress rules\",\"production_blocked\":true}",
     "production_blocked": true
   }
 ]
