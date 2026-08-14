@@ -1,0 +1,1 @@
+{"status":"passed","mode":"ssh_harden_apply","task_id":"task-0010","project_id":"desarrollo-promtbi-main","backup_file":"/etc/ssh/sshd_config.bak.task-0010","config_valid":true,"ssh_restarted":false,"production_blocked":true}

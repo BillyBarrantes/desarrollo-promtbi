@@ -1,7 +1,7 @@
 {
   "task_id": "task-0010",
   "project_id": "desarrollo-promtbi-main",
-  "status": "approved",
+  "status": "closed",
   "branch": "agent/task-0010",
   "pr_number": 11,
   "pr_base": "main",
@@ -15,7 +15,8 @@
   "production_blocked": true,
   "plan_status": null,
   "created_at": "2026-08-14T00:00:00Z",
-  "updated_at": "2026-08-14T08:52:45Z",
+  "updated_at": "2026-08-14T09:18:41Z",
   "approved_by": "1450989719",
-  "approved_at": "2026-08-14T08:50:40Z"
+  "approved_at": "2026-08-14T08:50:40Z",
+  "close_reason": "Lote 1 ejecutado: usuarios, hardening SSH y firewall basico aplicados; produccion bloqueada."
 }

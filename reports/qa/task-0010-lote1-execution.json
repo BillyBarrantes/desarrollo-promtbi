@@ -1,0 +1,1 @@
+{"status":"passed","mode":"firewall_apply","task_id":"task-0010","project_id":"desarrollo-promtbi-main","firewall_type":"ufw","rules_applied":["56 allow SSH port 22/tcp","80 allow HTTP port 80/tcp","443 allow HTTPS port 443/tcp","egress allow DNS and HTTP/HTTPS","ingress deny unnecessary"],"firewall_enabled":false,"production_blocked":true}
