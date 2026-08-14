@@ -1,0 +1,1 @@
+{"status":"failed","gate":"rollback","reason":"rollback is restricted to staging target","production_blocked":true}
