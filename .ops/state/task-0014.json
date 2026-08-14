@@ -1,7 +1,7 @@
 {
   "task_id": "task-0014",
   "project_id": "desarrollo-promtbi-main",
-  "status": "approved",
+  "status": "closed",
   "branch": "agent/task-0014",
   "pr_number": 17,
   "pr_base": "main",
@@ -17,7 +17,8 @@
   "phase": "10",
   "phase_status": "in_progress",
   "created_at": "2026-08-14T00:00:00Z",
-  "updated_at": "2026-08-14T17:10:29Z",
+  "updated_at": "2026-08-14T18:01:00Z",
   "approved_by": "1450989719",
-  "approved_at": "2026-08-14T17:10:26Z"
+  "approved_at": "2026-08-14T17:10:26Z",
+  "close_reason": "Lote 1 Fase 10 ejecutado: logrotate, backups, monitoring, alerts y locks aplicados; produccion bloqueada."
 }
