@@ -1,0 +1,1 @@
+{"status":"preparation_only","action":"setup_users","mode":"dry_run","project_id":"desarrollo-promtbi-main","task_id":"task-0009","users_to_create":["promtbi-bot","promtbi-agent","promdata-svc","tresniveles-svc"],"groups_to_create":["promtbi-users","promdata-svc","tresniveles-svc"],"production_blocked":true}
