@@ -3,8 +3,8 @@
   "project_id": "desarrollo-promtbi-main",
   "status": "approved",
   "branch": "agent/task-0010",
-  "pr_number": null,
-  "pr_base": null,
+  "pr_number": 11,
+  "pr_base": "main",
   "commit_sha": null,
   "merge_commit_sha": null,
   "merge_status": null,
@@ -15,7 +15,7 @@
   "production_blocked": true,
   "plan_status": null,
   "created_at": "2026-08-14T00:00:00Z",
-  "updated_at": "2026-08-14T08:50:40Z",
+  "updated_at": "2026-08-14T08:52:45Z",
   "approved_by": "1450989719",
   "approved_at": "2026-08-14T08:50:40Z"
 }
