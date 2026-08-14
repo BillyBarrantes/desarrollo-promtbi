@@ -1,0 +1,1 @@
+{"status":"passed","gate":"qa","project_id":"desarrollo-promtbi-main","task_id":"task-0008","checks":["bash -n","git diff --check","contract","security"]}
