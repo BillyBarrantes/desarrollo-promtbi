@@ -1,10 +1,10 @@
 {
   "task_id": "task-0019",
   "project_id": "desarrollo-promtbi-main",
-  "status": "open",
+  "status": "approved",
   "branch": "agent/task-0019",
-  "pr_number": null,
-  "pr_base": null,
+  "pr_number": 24,
+  "pr_base": "main",
   "commit_sha": null,
   "merge_commit_sha": null,
   "merge_status": null,
@@ -18,5 +18,7 @@
   "phase_status": "in_progress",
   "saas_target": "promdata",
   "created_at": "2026-08-14T00:00:00Z",
-  "updated_at": "2026-08-14T00:00:00Z"
+  "updated_at": "2026-08-14T20:05:13Z",
+  "approved_by": "1450989719",
+  "approved_at": "2026-08-14T20:05:11Z"
 }
