@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "mode": "lote1_execution",
+  "task_id": "task-0014",
+  "project_id": "desarrollo-promtbi-main",
+  "logrotate": {
+    "status": "passed",
+    "mode": "logrotate_apply",
+    "task_id": "task-0014",
+    "project_id": "desarrollo-promtbi-main",
+    "config_file": "/etc/logrotate.d/agentic",
+    "rotation_frequency": "daily",
+    "retention_days": 7,
+    "compression": "gzip",
+    "note": "config installed; logrotate NOT executed",
+    "production_blocked": true
+  },
+  "backups": {
+    "status": "passed",
+    "mode": "backups_apply",
+    "task_id": "task-0014",
+    "project_id": "desarrollo-promtbi-main",
+    "backup_directory": "/srv/agentic/backups",
+    "backup_script": "/usr/local/bin/agentic-backup.sh",
+    "retention_days": 30,
+    "note": "backup script installed; NOT executed",
+    "production_blocked": true
+  },
+  "production_blocked": true
+}

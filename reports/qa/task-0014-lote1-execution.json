@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "mode": "lote1_execution",
+  "task_id": "task-0014",
+  "project_id": "desarrollo-promtbi-main",
+  "monitoring": {
+    "status": "passed",
+    "mode": "monitoring_apply",
+    "task_id": "task-0014",
+    "project_id": "desarrollo-promtbi-main",
+    "healthcheck_script": "/usr/local/bin/agentic-healthcheck.sh",
+    "metrics_directory": "/srv/agentic/metrics",
+    "note": "healthcheck script installed; no monitoring stack installed",
+    "production_blocked": true
+  },
+  "production_blocked": true
+}

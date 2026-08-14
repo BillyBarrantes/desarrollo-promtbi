@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "mode": "lote1_execution",
+  "task_id": "task-0014",
+  "project_id": "desarrollo-promtbi-main",
+  "locks": {
+    "status": "passed",
+    "mode": "locks_apply",
+    "task_id": "task-0014",
+    "project_id": "desarrollo-promtbi-main",
+    "locks_directory": ".ops/locks",
+    "locks_script": "/usr/local/bin/agentic-locks.sh",
+    "default_ttl_hours": 1,
+    "note": "locks script installed; no real locks created",
+    "production_blocked": true
+  },
+  "alerts": {
+    "status": "passed",
+    "mode": "alerts_apply",
+    "task_id": "task-0014",
+    "project_id": "desarrollo-promtbi-main",
+    "alerts_script": "/usr/local/bin/agentic-alerts.sh",
+    "notification_channel": "telegram",
+    "note": "alerts script installed; no cron configured",
+    "production_blocked": true
+  },
+  "production_blocked": true
+}
