@@ -1,0 +1,1 @@
+{"status":"approved","action":"approve_staging","idempotent":true,"task_id":"task-0008","project_id":"desarrollo-promtbi-main","target":"staging","approved_by":"1450989719","approved_at":"2026-08-14T07:47:15Z","commit_sha":"e32c79264ecb54dc9ae0f6e4f6aa6a82eff1c8df","merge_commit_sha":"a7d6cf1a8a97c7358a408b75350487e704957c4b","production_blocked":true}
