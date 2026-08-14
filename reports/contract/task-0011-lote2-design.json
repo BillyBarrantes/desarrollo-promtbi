@@ -1,0 +1,20 @@
+[
+  {
+    "evidence": "lote2_design",
+    "task_id": "task-0011",
+    "script": "setup-secrets-apply.sh",
+    "tested": "sin --apply",
+    "rc": 1,
+    "output": "{\"status\":\"failed\",\"mode\":\"secrets_apply\",\"reason\":\"only --apply mode is supported (requires sudo and human approval)\",\"production_blocked\":true}",
+    "production_blocked": true
+  },
+  {
+    "evidence": "lote2_design",
+    "task_id": "task-0011",
+    "script": "setup-secrets-apply.sh",
+    "tested": "con --apply sin root",
+    "rc": 1,
+    "output": "{\"status\":\"failed\",\"mode\":\"secrets_apply\",\"reason\":\"must run as root (EUID=0) to create secrets layout\",\"production_blocked\":true}",
+    "production_blocked": true
+  }
+]
