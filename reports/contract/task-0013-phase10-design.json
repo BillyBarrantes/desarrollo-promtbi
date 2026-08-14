@@ -1,1 +1,42 @@
-[]
+{
+  "status": "passed",
+  "mode": "dry_run_validation",
+  "task_id": "task-0013",
+  "project_id": "desarrollo-promtbi-main",
+  "logrotate": {
+    "status": "preparation_only",
+    "action": "setup_logrotate",
+    "mode": "dry_run",
+    "project_id": "desarrollo-promtbi-main",
+    "task_id": "task-0013",
+    "logs_to_rotate": [
+      ".ops/logs/*.log",
+      "/var/log/agentic/*.log"
+    ],
+    "rotation_frequency": "daily",
+    "retention_days": 7,
+    "compression": "gzip",
+    "note": "no /etc/logrotate.d/ changes will be applied in dry-run",
+    "production_blocked": true
+  },
+  "backups": {
+    "status": "preparation_only",
+    "action": "setup_backups",
+    "mode": "dry_run",
+    "project_id": "desarrollo-promtbi-main",
+    "task_id": "task-0013",
+    "backup_sources": [
+      ".ops/",
+      "secrets/",
+      "workspaces/",
+      "DB (cuando exista)"
+    ],
+    "backup_destination_local": "/srv/agentic/backups",
+    "backup_destination_remote": "TBD",
+    "frequency": "daily",
+    "retention_days": 30,
+    "note": "no rsync/tar/copies will be executed in dry-run",
+    "production_blocked": true
+  },
+  "production_blocked": true
+}
