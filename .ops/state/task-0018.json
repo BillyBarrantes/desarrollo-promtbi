@@ -1,0 +1,21 @@
+{
+  "task_id": "task-0018",
+  "project_id": "desarrollo-promtbi-main",
+  "status": "open",
+  "branch": "agent/task-0018",
+  "pr_number": null,
+  "pr_base": null,
+  "commit_sha": null,
+  "merge_commit_sha": null,
+  "merge_status": null,
+  "staging_approval": "PENDING",
+  "staging_approved_by": null,
+  "staging_approved_at": null,
+  "staging_target": null,
+  "production_blocked": true,
+  "plan_status": null,
+  "phase": "10.5",
+  "phase_status": "completed",
+  "created_at": "2026-08-14T00:00:00Z",
+  "updated_at": "2026-08-14T00:00:00Z"
+}
