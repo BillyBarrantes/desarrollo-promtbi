@@ -1,0 +1,1 @@
+{"status":"passed","mode":"workspace_isolation_apply","task_id":"task-0011","project_id":"desarrollo-promtbi-main","workspaces_created":["/srv/agentic/workspaces/desarrollo-promtbi-main","/srv/agentic/workspaces/promdata","/srv/agentic/workspaces/tres-niveles-web"],"permissions_set":"750","note":"no real data moved yet","production_blocked":true}

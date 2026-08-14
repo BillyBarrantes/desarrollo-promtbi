@@ -1,0 +1,1 @@
+{"status":"passed","mode":"secrets_apply","task_id":"task-0011","project_id":"desarrollo-promtbi-main","directories_created":["/srv/agentic/secrets/desarrollo-promtbi-main","/srv/agentic/secrets/promdata","/srv/agentic/secrets/tres-niveles-web"],"permissions_set":"700","note":"only empty placeholders created; no real secrets","production_blocked":true}

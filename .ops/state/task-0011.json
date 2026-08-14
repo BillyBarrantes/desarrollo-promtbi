@@ -1,7 +1,7 @@
 {
   "task_id": "task-0011",
   "project_id": "desarrollo-promtbi-main",
-  "status": "approved",
+  "status": "closed",
   "branch": "agent/task-0011",
   "pr_number": 13,
   "pr_base": "main",
@@ -15,7 +15,8 @@
   "production_blocked": true,
   "plan_status": null,
   "created_at": "2026-08-14T00:00:00Z",
-  "updated_at": "2026-08-14T09:25:24Z",
+  "updated_at": "2026-08-14T16:22:39Z",
   "approved_by": "1450989719",
-  "approved_at": "2026-08-14T09:25:20Z"
+  "approved_at": "2026-08-14T09:25:20Z",
+  "close_reason": "Lote 2 ejecutado: layout de secretos, aislamiento de workspaces y restriccion de egress aplicados; produccion bloqueada."
 }
