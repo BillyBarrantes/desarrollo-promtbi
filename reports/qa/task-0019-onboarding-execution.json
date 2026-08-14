@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "mode": "onboarding_execution",
+  "task_id": "task-0019",
+  "project_id": "promdata",
+  "first_task": {
+    "status": "passed",
+    "mode": "first_task_apply",
+    "project_id": "promdata",
+    "production_blocked": true
+  },
+  "enabled": {
+    "status": "passed",
+    "mode": "enable_saas_apply",
+    "project_id": "promdata",
+    "production_blocked": true
+  },
+  "production_blocked": true
+}

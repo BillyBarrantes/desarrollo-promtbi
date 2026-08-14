@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "mode": "onboarding_execution",
+  "task_id": "task-0019",
+  "project_id": "promdata",
+  "registration": {
+    "status": "passed",
+    "mode": "register_apply",
+    "project_id": "promdata",
+    "production_blocked": true
+  },
+  "stack": {
+    "status": "passed",
+    "mode": "detect_stack_apply",
+    "project_id": "promdata",
+    "production_blocked": true
+  },
+  "playwright": {
+    "status": "passed",
+    "mode": "setup_playwright_apply",
+    "project_id": "promdata",
+    "production_blocked": true
+  },
+  "production_blocked": true
+}
