@@ -1,0 +1,20 @@
+[
+  {
+    "evidence": "lote1_design",
+    "task_id": "task-0010",
+    "script": "setup-firewall-apply.sh",
+    "tested": "sin --apply",
+    "rc": 1,
+    "output": "",
+    "production_blocked": true
+  },
+  {
+    "evidence": "lote1_design",
+    "task_id": "task-0010",
+    "script": "setup-firewall-apply.sh",
+    "tested": "con --apply sin root",
+    "rc": 1,
+    "output": "",
+    "production_blocked": true
+  }
+]
