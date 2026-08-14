@@ -1,7 +1,7 @@
 {
   "task_id": "task-0009",
   "project_id": "desarrollo-promtbi-main",
-  "status": "open",
+  "status": "approved",
   "branch": "agent/task-0009",
   "pr_number": null,
   "pr_base": null,
@@ -15,5 +15,7 @@
   "production_blocked": true,
   "plan_status": null,
   "created_at": "2026-08-14T00:00:00Z",
-  "updated_at": "2026-08-14T00:00:00Z"
+  "updated_at": "2026-08-14T08:28:43Z",
+  "approved_by": "1450989719",
+  "approved_at": "2026-08-14T08:28:43Z"
 }
